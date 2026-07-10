@@ -1,0 +1,78 @@
+<prompt>
+  <meta>
+    <taskId>TASK-2</taskId>
+    <title>Danh sách acc và tab lọc</title>
+    <estimatedTime>45-90m</estimatedTime>
+  </meta>
+
+  <goal>Hiển thị danh sách acc theo 3 tab: Tất cả, Acc của tôi, Acc đã tham gia, có search và responsive.</goal>
+  <frsReference>docs/01_Requirements_FRS.md</frsReference>
+  <planReference>docs/02_Task_Breakdown.md</planReference>
+  <taskUnit>Account list task</taskUnit>
+
+  <context>
+    Đọc section 5.2 (Trang danh sách acc) và section 8.1 (Xem danh sách acc) trong FRS.
+    Đọc section 6 (Quy ước chung) và Task 2 trong docs/02_Task_Breakdown.md để hiểu rõ logic 3 tab.
+    Tập trung vào list view, tab lọc, search và badge trạng thái.
+    Không làm chi tiết acc hay invitation.
+    Nếu có source code, chỉ sửa các file trong pages/acc-list/ và features/acc-management/, không sửa detail hoặc invitation modules.
+  </context>
+
+  <scope>
+    <allowed>
+      - Tạo hoặc chuẩn hóa UI danh sách acc
+      - Thêm tab lọc
+      - Hiển thị badge trạng thái acc
+      - Hiển thị người đang giữ acc nếu có
+      - Đảm bảo responsive trên desktop web và mobile web
+      - Thêm search acc
+    </allowed>
+    <notAllowed>
+      - Không làm chi tiết acc
+      - Không làm xử lý mời thành viên
+      - Không làm luồng đăng ký chơi
+    </notAllowed>
+  </scope>
+
+  <hardRules>
+    <rule>Tabs phải khớp chính xác với quy tắc MVP.</rule>
+    <rule>Giữ UI list đơn giản và dễ đọc trên mobile.</rule>
+    <rule>Search phải lọc theo tên account.</rule>
+    <rule>Tên account phải unique - không cho phép trùng lặp.</rule>
+  </hardRules>
+
+  <tasks>
+    <task>Xây dựng layout danh sách account.</task>
+    <task>Implement hành vi lọc 3 tab.</task>
+    <task>Hiển thị badge trạng thái và thông tin người đang giữ.</task>
+    <task>Thêm search và verify hoạt động với list state.</task>
+  </tasks>
+
+  <constraints>
+    <constraint>Layout mobile phải dùng được bằng một tay, nút tối thiểu 44x44px touch target.</constraint>
+    <constraint>Logic lọc tab phải tuân theo đúng section 6 trong Task Breakdown.</constraint>
+    <constraint>Search chỉ lọc theo tên account, không lọc theo field khác.</constraint>
+  </constraints>
+
+  <acceptanceCriteria>
+    <criteria>Có đúng 3 tabs: Tất cả, Acc của tôi, Acc đã tham gia.</criteria>
+    <criteria>Tab switch cập nhật danh sách đúng.</criteria>
+    <criteria>Search lọc accounts theo tên.</criteria>
+    <criteria>UI vẫn sử dụng được trên mobile web.</criteria>
+    <criteria>Không cho tạo account trùng tên - phải hiển thị lỗi.</criteria>
+  </acceptanceCriteria>
+
+  <testPlan>
+    <item>Chuyển qua tất cả 3 tabs.</item>
+    <item>Verify badge trạng thái và label người giữ.</item>
+    <item>Search một tên account và xác nhận filtering.</item>
+    <item>Kiểm tra layout mobile.</item>
+  </testPlan>
+
+  <outputRequired>
+    <item>Màn hình danh sách account</item>
+    <item>Lọc 3 tabs</item>
+    <item>Hành vi search</item>
+    <item>Layout responsive</item>
+  </outputRequired>
+</prompt>

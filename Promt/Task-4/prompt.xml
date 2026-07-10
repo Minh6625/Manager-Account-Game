@@ -1,0 +1,75 @@
+<prompt>
+  <meta>
+    <taskId>TASK-4</taskId>
+    <title>Mời thành viên vào acc</title>
+    <estimatedTime>60-90m</estimatedTime>
+  </meta>
+
+  <goal>Xây dựng luồng mời thành viên có trạng thái chờ xác nhận, chỉ chuyển thành member sau khi chấp nhận.</goal>
+  <frsReference>docs/01_Requirements_FRS.md</frsReference>
+  <planReference>docs/02_Task_Breakdown.md</planReference>
+  <taskUnit>Invitation flow task</taskUnit>
+
+  <context>
+    Đọc section 6.4 (Mời thành viên vào acc) trong FRS.
+    Đọc section 6 (Quy ước chung) và Task 4 trong docs/02_Task_Breakdown.md để hiểu quy tắc 24h và 5 member.
+    Tập trung vào invitation pending/accepted/expired states.
+    Không cho phép add thẳng member mà bỏ qua invitation.
+    Không can thiệp sang play flow.
+    Nếu có source code, chỉ sửa các file trong features/invite-member/ và modules/invitations/, không sửa play-session hay acc CRUD.
+  </context>
+
+  <scope>
+    <allowed>
+      - Tạo luồng mời thành viên
+      - Hiển thị trạng thái lời mời chờ xác nhận
+      - Cho phép người được mời chấp nhận lời mời
+      - Ghi lịch sử lời mời và xác nhận
+    </allowed>
+    <notAllowed>
+      - Không cho thêm thẳng thành viên mà bỏ qua lời mời
+      - Không làm luồng kick thành viên
+      - Không làm luồng đăng ký chơi
+    </notAllowed>
+  </scope>
+
+  <hardRules>
+    <rule>Lời mời phải ở trạng thái pending cho đến khi được chấp nhận rõ ràng.</rule>
+    <rule>Lời mời hết hạn sau 24 giờ nếu không được chấp nhận.</rule>
+    <rule>Một account không được vượt quá 5 thành viên.</rule>
+  </hardRules>
+
+  <tasks>
+    <task>Tạo luồng mời.</task>
+    <task>Hỗ trợ trạng thái pending và accepted.</task>
+    <task>Đảm bảo user được chấp nhận chỉ trở thành member thật sau khi xác nhận.</task>
+    <task>Ghi lịch sử invitation.</task>
+  </tasks>
+
+  <constraints>
+    <constraint>Lời mời hết hạn sau đúng 24 giờ nếu không được chấp nhận.</constraint>
+    <constraint>Giới hạn member không được vượt quá 5 thành viên bất cứ lúc nào.</constraint>
+    <constraint>Lời mời pending không tính vào giới hạn 5 member cho đến khi được chấp nhận.</constraint>
+    <constraint>Chỉ chủ phòng mới có thể gửi lời mời.</constraint>
+  </constraints>
+
+  <acceptanceCriteria>
+    <criteria>Lời mời không được chuyển thành member ngay lập tức.</criteria>
+    <criteria>Lời mời được chấp nhận tạo thành member thật.</criteria>
+    <criteria>Lời mời chưa chấp nhận hết hạn sau 24 giờ.</criteria>
+    <criteria>Giới hạn member duy trì trong phạm vi 5 người.</criteria>
+  </acceptanceCriteria>
+
+  <testPlan>
+    <item>Tạo lời mời và verify trạng thái pending.</item>
+    <item>Chấp nhận lời mời và verify membership được tạo.</item>
+    <item>Kiểm tra hành vi lời mời expired sau 24 giờ.</item>
+    <item>Verify giới hạn 5 member được enforce.</item>
+  </testPlan>
+
+  <outputRequired>
+    <item>Luồng mời</item>
+    <item>Trạng thái pending/accepted/expired</item>
+    <item>Lịch sử ghi nhận các hành động invitation</item>
+  </outputRequired>
+</prompt>

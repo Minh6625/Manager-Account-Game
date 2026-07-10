@@ -1,0 +1,77 @@
+<prompt>
+  <meta>
+    <taskId>TASK-6</taskId>
+    <title>Tạo sửa xóa acc và kick thành viên</title>
+    <estimatedTime>45-90m</estimatedTime>
+  </meta>
+
+  <goal>Cho phép chủ phòng quản lý acc và thành viên trong phạm vi quyền của mình.</goal>
+  <frsReference>docs/01_Requirements_FRS.md</frsReference>
+  <planReference>docs/02_Task_Breakdown.md</planReference>
+  <taskUnit>Account management task</taskUnit>
+
+  <context>
+    Đọc section 6.1, 6.2, 6.3, 6.5 (Quản lý acc) và section 8.7 (Kick thành viên) trong FRS.
+    Đọc Task 6 trong docs/02_Task_Breakdown.md để hiểu quyền chủ phòng.
+    Tập trung vào CRUD acc và kick member.
+    Không làm add thẳng member (phải qua invitation), không làm play flow.
+    Nếu có source code, chỉ sửa các file trong features/acc-management/ và modules/accs/, modules/memberships/, không sửa invitation hay play-session.
+  </context>
+
+  <scope>
+    <allowed>
+      - Tạo acc
+      - Sửa acc
+      - Xóa acc
+      - Kick thành viên
+      - Hiển thị/ẩn nút theo quyền chủ phòng
+      - Ghi lịch sử thao tác quản lý
+    </allowed>
+    <notAllowed>
+      - Không thêm thẳng thành viên
+      - Không làm trạng thái chơi
+      - Không làm realtime phức tạp
+    </notAllowed>
+  </scope>
+
+  <hardRules>
+    <rule>Chỉ owner mới có thể quản lý account và kick thành viên.</rule>
+    <rule>Tất cả hành động phá hủy phải yêu cầu xác nhận.</rule>
+    <rule>Thành viên bị loại phải mất quyền truy cập account ngay lập tức.</rule>
+  </hardRules>
+
+  <tasks>
+    <task>Implement các luồng create/edit/delete account.</task>
+    <task>Implement luồng kick member.</task>
+    <task>Chỉ hiển thị controls cho owner.</task>
+    <task>Ghi lịch sử quản lý.</task>
+  </tasks>
+
+  <constraints>
+    <constraint>Chỉ chủ phòng mới có thể edit, delete account hoặc kick thành viên.</constraint>
+    <constraint>Hành động phá hủy (delete, kick) phải hiển thị dialog xác nhận trước khi thực thi.</constraint>
+    <constraint>Thành viên bị kick ngay lập tức mất tất cả quyền truy cập vào account đó.</constraint>
+    <constraint>Tất cả hành động quản lý phải được ghi vào lịch sử với action_type, timestamp và actor.</constraint>
+  </constraints>
+
+  <acceptanceCriteria>
+    <criteria>Chỉ owner mới thấy và dùng được controls edit/delete/kick.</criteria>
+    <criteria>CRUD account hoạt động theo quy tắc phân quyền.</criteria>
+    <criteria>Thành viên bị kick không thể tiếp tục hành động trong account đó.</criteria>
+    <criteria>Hành động deletion và kick yêu cầu xác nhận.</criteria>
+  </acceptanceCriteria>
+
+  <testPlan>
+    <item>Kiểm tra hiển thị controls cho owner và non-owner.</item>
+    <item>Test CRUD với quyền hợp lệ và không hợp lệ.</item>
+    <item>Kick một member và verify trạng thái sau đó.</item>
+    <item>Xác nhận dialogs trước các hành động phá hủy.</item>
+  </testPlan>
+
+  <outputRequired>
+    <item>Luồng CRUD account</item>
+    <item>Luồng kick member</item>
+    <item>Controls chỉ dành cho owner</item>
+    <item>Bản ghi lịch sử quản lý</item>
+  </outputRequired>
+</prompt>

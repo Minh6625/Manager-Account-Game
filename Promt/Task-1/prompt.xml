@@ -1,0 +1,72 @@
+<prompt>
+  <meta>
+    <taskId>TASK-1</taskId>
+    <title>Đăng nhập nội bộ và ghi nhớ phiên</title>
+    <estimatedTime>30-60m</estimatedTime>
+  </meta>
+
+  <goal>Xây dựng luồng đăng nhập nội bộ đơn giản và ghi nhớ phiên trong 7 ngày nếu còn hợp lệ.</goal>
+  <frsReference>docs/01_Requirements_FRS.md</frsReference>
+  <planReference>docs/02_Task_Breakdown.md</planReference>
+  <taskUnit>Authentication task</taskUnit>
+
+  <context>
+    Đọc section 5.1 (Trang đăng nhập) và section 2.2 (Auth flow) trong docs/02_Task_Breakdown.md.
+    Tập trung vào login, session và remember me.
+    Không được đụng sang quản lý acc, invitation hay status.
+    Nếu có source code hiện tại, chỉ sửa các file liên quan đến auth module, không sửa modules khác.
+  </context>
+
+  <scope>
+    <allowed>
+      - Tạo hoặc chuẩn hóa flow đăng nhập nội bộ
+      - Lưu trạng thái đăng nhập
+      - Giữ session/token còn hợp lệ
+      - Hiển thị trạng thái đăng nhập cơ bản
+      - Áp dụng remember login 7 ngày nếu session còn hợp lệ
+    </allowed>
+    <notAllowed>
+      - Không làm xác thực đa lớp
+      - Không làm social login hoặc SSO
+      - Không mở rộng sang cơ chế bảo mật doanh nghiệp
+      - Không chỉnh luồng quản lý acc
+    </notAllowed>
+  </scope>
+
+  <hardRules>
+    <rule>Remember login phải tuân thủ quy tắc 7 ngày còn hợp lệ.</rule>
+    <rule>Sử dụng auth behavior đơn giản, phù hợp cho MVP.</rule>
+    <rule>Không thay đổi các màn hình hoặc luồng không liên quan.</rule>
+  </hardRules>
+
+  <tasks>
+    <task>Implement hoặc cải thiện luồng đăng nhập.</task>
+    <task>Lưu trạng thái auth an toàn trong suốt thời gian session.</task>
+    <task>Giữ user đăng nhập khi reload và quay lại nếu vẫn còn hợp lệ.</task>
+    <task>Cung cấp giải thích ngắn về cách session được lưu và kiểm tra.</task>
+  </tasks>
+
+  <constraints>
+    <constraint>Sử dụng httpOnly cookies hoặc cơ chế session an toàn, tránh localStorage cho token nhạy cảm.</constraint>
+    <constraint>Session expiry phải đúng 7 ngày kể từ lần login cuối.</constraint>
+    <constraint>Giữ implementation đơn giản và phù hợp với scope MVP.</constraint>
+  </constraints>
+
+  <acceptanceCriteria>
+    <criteria>User đăng nhập được bằng tài khoản nội bộ.</criteria>
+    <criteria>Reload hoặc mở lại app không buộc đăng nhập lại khi session còn hợp lệ.</criteria>
+    <criteria>User phải đăng nhập lại sau 7 ngày hoặc sau khi logout.</criteria>
+  </acceptanceCriteria>
+
+  <testPlan>
+    <item>Đăng nhập và reload trang.</item>
+    <item>Đóng và mở lại tab/browser khi session còn hợp lệ.</item>
+    <item>Xác nhận logout xóa quyền truy cập.</item>
+  </testPlan>
+
+  <outputRequired>
+    <item>Luồng đăng nhập hoạt động</item>
+    <item>Hành vi remember-login</item>
+    <item>Note ngắn về session persistence</item>
+  </outputRequired>
+</prompt>

@@ -1,0 +1,260 @@
+# Group N2 – AI Agent Code Weekly Objectives
+
+## Mục tiêu
+
+Trong tuần này, Group N2 cần hiểu và vận hành được quy trình làm việc với **AI Agent Code** theo chuẩn của MeU.
+
+Mục tiêu không phải chỉ là **"biết prompt AI"**, mà là biết cách:
+
+- Biến yêu cầu thành một kế hoạch (Plan) rõ ràng.
+- Chia task đủ nhỏ.
+- Tạo Prompt đúng Scope.
+- Giao cho AI Agent triển khai.
+- Review kết quả.
+- Test.
+- Báo cáo thay đổi.
+- Quản lý rủi ro.
+
+Sau tuần này, mỗi thành viên trong Group N2 cần có khả năng tham gia quy trình phát triển với AI Agent Code một cách có kiểm soát.
+
+---
+
+# Kết quả cần đạt
+
+Cuối tuần, Group N2 cần chứng minh được các năng lực sau.
+
+## 1. Hiểu mindset làm việc của Team
+
+### Self-Trust
+- Tự hiểu task.
+- Tự chịu trách nhiệm với phần việc của mình.
+
+### Team Trust
+- Cập nhật tiến độ rõ ràng.
+- Báo blocker sớm.
+- Phối hợp với nhóm.
+
+### System Trust
+- Làm việc theo quy trình.
+- Có Plan.
+- Có Prompt.
+- Có Review.
+- Có Report.
+
+---
+
+## 2. Hiểu Flow làm việc với AI Agent Code
+
+- Làm rõ Requirement.
+- Lập Plan triển khai.
+- Chia task nhỏ (30–90 phút).
+- Tạo `prompt.xml` cho từng task.
+- Review Prompt trước khi giao Agent.
+- Agent đọc hiểu kiến trúc và Source.
+- Agent Code đúng Scope.
+- Engineer Review.
+- Test / Build.
+- Báo cáo thay đổi, kết quả và rủi ro.
+
+---
+
+## 3. Thực hành
+
+- Thực hành ít nhất **01 task kỹ thuật nhỏ** theo đúng quy trình.
+
+---
+
+## 4. Tổng kết
+
+- Có tài liệu hoặc note mô tả cách Group N2 sẽ vận hành quy trình này trong các task tiếp theo.
+
+---
+
+# Phạm vi công việc
+
+## 1. Đọc và hiểu quy trình AI Agent Code
+
+Group N2 cần đọc Flow/Quy trình được cung cấp và nắm rõ từng bước.
+
+Sau khi đọc phải trả lời được:
+
+- Vì sao không giao task lớn trực tiếp cho Agent?
+- Vì sao mỗi Prompt nên nằm trong khoảng 30–90 phút?
+- Vì sao cần FRS/Requirement trước khi tạo Prompt?
+- Vì sao Agent cần đọc kiến trúc/Source trước khi Code?
+- Vì sao Engineer vẫn phải Review, Test, Build sau khi Agent Code?
+- Vì sao phải báo cáo thay đổi, kết quả và rủi ro sau mỗi task?
+
+---
+
+## 2. Chuẩn hóa cách chia Task
+
+Mỗi thành viên cần thực hành chia một yêu cầu kỹ thuật thành các task nhỏ.
+
+Mỗi Task cần có:
+
+- Tên Task rõ ràng.
+- Mục tiêu cụ thể.
+- Scope cho phép.
+- Scope không được làm.
+- Output cần có.
+- Acceptance Criteria.
+- Test Plan.
+- Ước lượng thời gian (30–90 phút).
+
+### Không được tạo Task mơ hồ
+
+- ❌ Làm module User
+- ❌ Fix toàn bộ UI
+- ❌ Tối ưu hệ thống
+- ❌ Refactor Source
+
+### Chuyển thành Task nhỏ
+
+- ✅ Kiểm tra và cập nhật Column Table theo Response API.
+- ✅ Tạo Guard kiểm tra quyền truy cập POS Page.
+- ✅ Tách Component Filter trong màn hình Report.
+- ✅ Fix Mapping Data Schedule theo `employee_id` và `date`.
+
+---
+
+## 3. Thực hành tạo `prompt.xml`
+
+Mỗi thành viên cần tạo ít nhất **01 Prompt** theo cấu trúc chuẩn.
+
+Prompt cần có tối thiểu:
+
+- meta
+- goal
+- frsReference / requirementReference
+- planReference
+- taskUnit
+- context
+- scope
+- hardRules
+- tasks
+- constraints
+- acceptanceCriteria
+- testPlan
+- outputRequired
+
+Prompt phải đủ rõ để Agent biết:
+
+- Cần làm gì.
+- Đọc file nào.
+- Không được sửa phần nào.
+- Output cuối cùng là gì.
+- Cách kiểm tra kết quả.
+- Cần báo cáo lại những gì.
+
+---
+
+## 4. Thực hành chạy quy trình
+
+Group N2 chọn **01 task kỹ thuật nhỏ**.
+
+Flow bắt buộc:
+
+1. Nhận Requirement.
+2. Lập Mini Plan.
+3. Chia Task nhỏ.
+4. Tạo `prompt.xml`.
+5. Review Prompt trong nhóm.
+6. Cho Agent đọc hiểu Source/Kiến trúc.
+7. Agent triển khai trong Scope.
+8. Engineer Review Code.
+9. Engineer Test / Build.
+10. Ghi nhận kết quả và rủi ro.
+
+### Ví dụ Task phù hợp
+
+- Mapping lại Column Table từ API Response.
+- Cập nhật Label/Status hiển thị.
+- Fix UI nhỏ có ảnh minh chứng.
+- Tách Helper Function.
+- Viết Checklist Test cho một màn hình.
+- Đọc một Module và viết Technical Summary.
+
+---
+
+## 5. Tổng kết Mindset làm việc
+
+Group N2 cần viết một Note ngắn.
+
+Nội dung cần có:
+
+- AI Agent không thay thế trách nhiệm của Engineer.
+- Engineer phải hiểu Requirement trước khi Prompt.
+- Engineer phải kiểm soát Scope.
+- Engineer phải Review Code trước khi Accept.
+- Engineer phải Test/Build trước khi báo Done.
+- Engineer phải giải thích được thay đổi Agent đã làm.
+- Không Merge hoặc Handoff khi chưa hiểu thay đổi.
+
+---
+
+# Deliverables cuối tuần
+
+Cuối tuần Group N2 cần nộp:
+
+1. File/Note tổng hợp quy trình làm việc với AI Agent Code.
+2. Ít nhất 01 ví dụ Task đã được chia nhỏ theo chuẩn 30–90 phút.
+3. Ít nhất 01 file `prompt.xml` mẫu.
+4. Kết quả thực hành 01 Task nhỏ với Agent.
+5. Báo cáo ngắn gồm:
+   - Đã làm gì.
+   - Đã hiểu gì.
+   - Còn vướng gì.
+   - Tuần sau sẽ áp dụng vào Task nào.
+
+---
+
+# Acceptance Criteria
+
+Task được xem là hoàn thành khi:
+
+- Group N2 giải thích được toàn bộ Flow làm việc với AI Agent Code.
+- Mỗi thành viên hiểu vì sao Task phải nhỏ, rõ Scope và có Acceptance Criteria.
+- Có ít nhất 01 Prompt mẫu đạt chuẩn.
+- Có ít nhất 01 Task nhỏ được chạy thử theo quy trình.
+- Engineer Review được Output của Agent, không chỉ Copy/Paste kết quả.
+- Có Test/Build hoặc Checklist kiểm tra sau khi Agent Code.
+- Có Report cuối tuần rõ ràng.
+- Team Lead/EM có thể dùng kết quả này để giao Task kỹ thuật thật cho Group N2 ở tuần sau.
+
+---
+
+# Weekly Report Format
+
+## 1. Completed This Week
+
+- Đã đọc và hiểu những phần nào của quy trình?
+- Đã tạo Task nhỏ nào?
+- Đã tạo `prompt.xml` nào?
+- Đã thực hành với Agent trên Task nào?
+
+---
+
+## 2. Key Learning
+
+- Em hiểu gì về cách làm việc với AI Agent Code?
+- Em hiểu gì về việc chia Task 30–90 phút?
+- Em hiểu gì về trách nhiệm Review/Test của Engineer?
+
+---
+
+## 3. Issues / Blockers
+
+- Phần nào chưa rõ?
+- Prompt phần nào còn khó viết?
+- Khi Agent Code có vấn đề gì?
+- Cần EM/Lead hỗ trợ gì?
+
+---
+
+## 4. Plan for Next Week
+
+- Áp dụng quy trình vào Task kỹ thuật thật.
+- Cải thiện `prompt.xml`.
+- Chuẩn hóa Checklist Review/Test.
+- Báo cáo kết quả theo từng Task.

@@ -1,0 +1,71 @@
+<prompt>
+  <meta>
+    <taskId>TASK-0</taskId>
+    <title>Chốt kiến trúc, schema và công nghệ</title>
+    <estimatedTime>30-60m</estimatedTime>
+  </meta>
+
+  <goal>Chốt frontend, API, database, auth flow, data model và ranh giới hệ thống trước khi code.</goal>
+  <frsReference>docs/01_Requirements_FRS.md</frsReference>
+  <planReference>docs/02_Task_Breakdown.md</planReference>
+  <taskUnit>Architecture and schema decision task</taskUnit>
+
+  <context>
+    Đọc và hiểu rõ FRS (docs/01_Requirements_FRS.md) và task breakdown (docs/02_Task_Breakdown.md) trước khi đề xuất bất kỳ quyết định nào.
+    Task này chỉ cần ra quyết định thiết kế và ranh giới triển khai một cách ngắn gọn.
+    Output phải ngắn gọn, rõ ràng, không code thực tế.
+  </context>
+
+  <scope>
+    <allowed>
+      - Chốt React + Vite + TypeScript cho frontend
+      - Chốt Node.js + Express + TypeScript cho API
+      - Chốt Supabase Free (PostgreSQL) cho database
+      - Chốt email/password, signup bằng email, forgot password qua OTP/email
+      - Chốt data model high level cho user, acc, membership, invitation, status_history, session
+      - Chốt rule 7 ngày session, 3 tab danh sách, 24h invitation, tối đa 5 member, chủ phòng có quyền riêng
+    </allowed>
+    <notAllowed>
+      - Không code feature thực tế
+      - Không build UI chi tiết
+      - Không tối ưu performance sâu
+    </notAllowed>
+  </scope>
+
+  <hardRules>
+    <rule>Giữ trong phạm vi stack đã chọn và constraints MVP.</rule>
+    <rule>Không đưa thêm admin role trừ khi yêu cầu rõ ràng.</rule>
+    <rule>Giữ output đủ ngắn gọn để làm handoff doc cho task tiếp theo.</rule>
+  </hardRules>
+
+  <tasks>
+    <task>Tóm tắt kiến trúc trong 1 section ngắn.</task>
+    <task>List các entity chính và quan hệ giữa chúng.</task>
+    <task>List các quyết định kỹ thuật đã chốt.</task>
+    <task>List các quy tắc nghiệp vụ mà tasks sau phải tuân theo.</task>
+  </tasks>
+
+  <constraints>
+    <constraint>Dùng ngôn ngữ đơn giản, trực tiếp.</constraint>
+    <constraint>Giữ thiết kế portable với Vercel + Supabase.</constraint>
+    <constraint>Output chỉ là documentation, không có implementation code.</constraint>
+  </constraints>
+
+  <acceptanceCriteria>
+    <criteria>Team có thể dùng output trực tiếp để bắt đầu implementation tasks.</criteria>
+    <criteria>Không có task sau phải đoán stack, auth, DB hoặc rule chính.</criteria>
+    <criteria>Output chứa ranh giới rõ ràng giữa frontend/API/database.</criteria>
+  </acceptanceCriteria>
+
+  <testPlan>
+    <item>Cross-check các rule đề xuất với FRS.</item>
+    <item>Kiểm tra output đủ để viết prompt tiếp theo không mơ hồ.</item>
+  </testPlan>
+
+  <outputRequired>
+    <item>Một tóm tắt kiến trúc ngắn</item>
+    <item>List entity với quan hệ</item>
+    <item>Các quyết định công nghệ đã chốt</item>
+    <item>Các quy tắc nghiệp vụ đã chốt</item>
+  </outputRequired>
+</prompt>

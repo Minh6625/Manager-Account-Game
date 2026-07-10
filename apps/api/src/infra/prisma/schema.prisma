@@ -1,0 +1,127 @@
+// Prisma Schema for Manager Account Lienquan
+// Generated from TASK-0 Architecture Decision
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ========== MODELS ==========
+
+model User {
+  id            String   @id @default(uuid())
+  email         String   @unique
+  passwordHash  String   @map("password_hash")
+  displayName   String?  @map("display_name")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  ownedAccs          Acc[]          @relation("OwnedAccs")
+  memberships        Membership[]
+  sentInvitations    Invitation[]   @relation("SentInvitations")
+  receivedInvitations Invitation[]  @relation("ReceivedInvitations")
+  statusHistory      StatusHistory[]
+
+  @@map("users")
+}
+
+model Acc {
+  id          String    @id @default(uuid())
+  name        String
+  ownerUserId String    @map("owner_user_id")
+  status      AccStatus @default(AVAILABLE)
+  note        String?
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  // Relations
+  owner         User            @relation("OwnedAccs", fields: [ownerUserId], references: [id], onDelete: Cascade)
+  memberships   Membership[]
+  invitations   Invitation[]
+  statusHistory StatusHistory[]
+
+  @@map("accs")
+}
+
+enum AccStatus {
+  AVAILABLE
+  IN_USE
+  PENDING_LOGOUT
+}
+
+model Membership {
+  id           String       @id @default(uuid())
+  accId        String       @map("acc_id")
+  userId       String       @map("user_id")
+  role         MemberRole
+  memberStatus MemberStatus @default(IDLE) @map("member_status")
+  joinedAt     DateTime     @default(now()) @map("joined_at")
+  leftAt       DateTime?    @map("left_at")
+
+  // Relations
+  acc  Acc  @relation(fields: [accId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([accId, userId])
+  @@map("memberships")
+}
+
+enum MemberRole {
+  OWNER
+  MEMBER
+}
+
+enum MemberStatus {
+  IDLE
+  PLAYING
+  PENDING_LOGOUT
+  KICKED
+}
+
+model Invitation {
+  id              String           @id @default(uuid())
+  accId           String           @map("acc_id")
+  invitedUserId   String?          @map("invited_user_id")
+  invitedEmail    String?          @map("invited_email")
+  invitedByUserId String           @map("invited_by_user_id")
+  status          InvitationStatus @default(PENDING)
+  expiresAt       DateTime         @map("expires_at")
+  createdAt       DateTime         @default(now()) @map("created_at")
+  respondedAt     DateTime?        @map("responded_at")
+
+  // Relations
+  acc         Acc   @relation(fields: [accId], references: [id], onDelete: Cascade)
+  invitedBy   User  @relation("SentInvitations", fields: [invitedByUserId], references: [id])
+  invitedUser User? @relation("ReceivedInvitations", fields: [invitedUserId], references: [id])
+
+  @@map("invitations")
+}
+
+enum InvitationStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+  EXPIRED
+}
+
+model StatusHistory {
+  id         String   @id @default(uuid())
+  accId      String   @map("acc_id")
+  userId     String?  @map("user_id")
+  actionType String   @map("action_type")
+  fromStatus String?  @map("from_status")
+  toStatus   String?  @map("to_status")
+  note       String?
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  // Relations
+  acc  Acc   @relation(fields: [accId], references: [id], onDelete: Cascade)
+  user User? @relation(fields: [userId], references: [id])
+
+  @@map("status_history")
+}

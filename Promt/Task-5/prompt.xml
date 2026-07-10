@@ -1,0 +1,76 @@
+<prompt>
+  <meta>
+    <taskId>TASK-5</taskId>
+    <title>Đăng ký chơi và xác nhận log out</title>
+    <estimatedTime>60-90m</estimatedTime>
+  </meta>
+
+  <goal>Xây dựng luồng đăng ký chơi khi acc trống, chặn khi đang có người giữ, và xác nhận log out khi kết thúc phiên.</goal>
+  <frsReference>docs/01_Requirements_FRS.md</frsReference>
+  <planReference>docs/02_Task_Breakdown.md</planReference>
+  <taskUnit>Play session task</taskUnit>
+
+  <context>
+    Đọc section 8.2, 8.3, 8.4, 8.5, 8.6 (Các luồng nghiệp vụ chính) trong FRS.
+    Đọc section 7 (Quy tắc nghiệp vụ chính) và Task 5 trong docs/02_Task_Breakdown.md.
+    Tập trung vào đăng ký chơi, trạng thái chờ xác nhận log out, và force reset nếu bị kẹt.
+    Không làm invitation hay CRUD acc.
+    Nếu có source code, chỉ sửa các file trong features/play-session/ và xử lý status, không sửa invitation hay acc-management modules.
+  </context>
+
+  <scope>
+    <allowed>
+      - Tạo hoặc chuẩn hóa luồng đăng ký chơi
+      - Chặn khi acc đang có người giữ
+      - Chuyển trạng thái sang chờ xác nhận khi kết thúc phiên
+      - Xác nhận log out để hoàn tất trả acc
+      - Ghi lịch sử thay đổi trạng thái
+    </allowed>
+    <notAllowed>
+      - Không tích hợp vào game thật
+      - Không làm realtime phức tạp
+      - Không làm thay đổi luồng mời thành viên
+    </notAllowed>
+  </scope>
+
+  <hardRules>
+    <rule>Chỉ một người chơi có thể giữ account tại một thời điểm.</rule>
+    <rule>Trạng thái pending logout không được tự biến mất cho đến khi xác nhận hoặc owner force reset.</rule>
+    <rule>Owner có thể force reset trạng thái bị kẹt nếu cần.</rule>
+  </hardRules>
+
+  <tasks>
+    <task>Implement luồng đăng ký chơi.</task>
+    <task>Chặn đăng ký khi người khác đang giữ account.</task>
+    <task>Hỗ trợ hành vi end-session và confirm-logout.</task>
+    <task>Ghi tất cả thay đổi trạng thái vào lịch sử.</task>
+  </tasks>
+
+  <constraints>
+    <constraint>Chỉ một member có thể giữ account tại bất kỳ thời điểm nào.</constraint>
+    <constraint>Trạng thái pending logout không được tự expire trong MVP, cần xác nhận rõ ràng hoặc owner force reset.</constraint>
+    <constraint>Chỉ chủ phòng mới có thể force reset trạng thái bị kẹt.</constraint>
+    <constraint>Tất cả chuyển đổi trạng thái phải được ghi vào bảng status_history.</constraint>
+  </constraints>
+
+  <acceptanceCriteria>
+    <criteria>Một member có thể bắt đầu chơi khi account đang rảnh.</criteria>
+    <criteria>Member khác bị chặn khi account đang được giữ.</criteria>
+    <criteria>Kết thúc phiên yêu cầu xác nhận logout.</criteria>
+    <criteria>Owner có thể force reset trạng thái bị kẹt.</criteria>
+  </acceptanceCriteria>
+
+  <testPlan>
+    <item>Đăng ký chơi từ account rảnh.</item>
+    <item>Thử đăng ký khi người khác đang giữ.</item>
+    <item>Kết thúc phiên và xác nhận logout.</item>
+    <item>Verify hành vi force reset.</item>
+  </testPlan>
+
+  <outputRequired>
+    <item>Luồng play session</item>
+    <item>Trạng thái held/free/pending logout</item>
+    <item>Bản ghi lịch sử trạng thái</item>
+    <item>Xử lý force reset</item>
+  </outputRequired>
+</prompt>

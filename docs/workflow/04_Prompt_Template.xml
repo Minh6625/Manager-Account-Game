@@ -1,0 +1,71 @@
+<prompt>
+  <meta>
+    <taskId>TASK-0</taskId>
+    <title>Chot kien truc, schema va cong nghe</title>
+    <estimatedTime>30-60m</estimatedTime>
+  </meta>
+
+  <goal>Chot frontend, API, database, auth flow, data model va ranh gioi he thong truoc khi code.</goal>
+
+  <frsReference>01_Requirements_FRS.md</frsReference>
+  <planReference>03_Task_Breakdown.md</planReference>
+
+  <taskUnit>Architecture and schema decision task</taskUnit>
+
+  <context>
+    Read the requirements and task breakdown before making any suggestion.
+    This task only needs design decisions and a concise implementation boundary.
+  </context>
+
+  <scope>
+    <allowed>
+      - Chot React + Vite + TypeScript cho frontend
+      - Chot Node.js + Express + TypeScript cho API
+      - Chot Supabase Free (PostgreSQL) cho database
+      - Chot email/password, signup by email, forgot password by OTP/email
+      - Chot data model high level cho user, acc, membership, invitation, status_history, session
+      - Chot rule 7 ngay session, 3 tab danh sach, 24h invitation, toi da 5 member, chu phong co quyen rieng
+    </allowed>
+    <notAllowed>
+      - Khong code feature thuc te
+      - Khong build UI chi tiet
+      - Khong toi uu performance sau
+    </notAllowed>
+  </scope>
+
+  <hardRules>
+    <rule>Stay within the chosen stack and MVP constraints.</rule>
+    <rule>Do not introduce admin role unless explicitly required.</rule>
+    <rule>Keep the output concise enough to become a handoff doc for the next task.</rule>
+  </hardRules>
+
+  <tasks>
+    <task>Summarize the architecture in 1 short section.</task>
+    <task>List the core entities and their relationships.</task>
+    <task>List the technical decisions that are already locked.</task>
+    <task>List the business rules that later tasks must follow.</task>
+  </tasks>
+
+  <constraints>
+    <constraint>Use simple, direct language.</constraint>
+    <constraint>Keep the design portable to Vercel + Supabase.</constraint>
+  </constraints>
+
+  <acceptanceCriteria>
+    <criteria>Team can use the output directly to start implementation tasks.</criteria>
+    <criteria>No later task has to guess the stack, auth, DB, or core rules.</criteria>
+    <criteria>The output contains a clear frontend/API/database boundary.</criteria>
+  </acceptanceCriteria>
+
+  <testPlan>
+    <item>Cross-check the proposed rules against the FRS.</item>
+    <item>Check that the output is sufficient to write the next prompt without ambiguity.</item>
+  </testPlan>
+
+  <outputRequired>
+    <item>One short architecture summary</item>
+    <item>Entity list with relationships</item>
+    <item>Locked technology decisions</item>
+    <item>Locked business rules</item>
+  </outputRequired>
+</prompt>

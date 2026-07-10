@@ -1,0 +1,80 @@
+<prompt>
+  <meta>
+    <taskId>TASK-3</taskId>
+    <title>Trang chi tiết acc và trạng thái thành viên</title>
+    <estimatedTime>60-90m</estimatedTime>
+  </meta>
+
+  <goal>Hiển thị đầy đủ thông tin acc, danh sách thành viên, trạng thái từng thành viên và 5 bản ghi lịch sử gần nhất. Có button "Xem thêm" để load toàn bộ lịch sử trong 3 ngày gần nhất.</goal>
+  <frsReference>docs/01_Requirements_FRS.md</frsReference>
+  <planReference>docs/02_Task_Breakdown.md</planReference>
+  <taskUnit>Account detail task</taskUnit>
+
+  <context>
+    Đọc section 5.3 (Trang chi tiết acc), section 7 (Trạng thái) trong FRS.
+    Đọc Task 3 trong docs/02_Task_Breakdown.md để hiểu output mong đợi.
+    Tập trung vào detail view và read-only state display.
+    Không làm invitation flow, play session flow hay CRUD acc.
+    Nếu có source code, chỉ sửa các file trong pages/acc-detail/ và components liên quan, không sửa invitation hay play-session modules.
+  </context>
+
+  <scope>
+    <allowed>
+      - Xây dựng hoặc chuẩn hóa layout trang chi tiết acc
+      - Hiển thị thông tin acc
+      - Hiển thị danh sách thành viên
+      - Hiển thị trạng thái thành viên
+      - Hiển thị lịch sử gần nhất, ưu tiên 5 bản ghi mới nhất
+      - Có button "Xem thêm" để hiển thị toàn bộ bản ghi trong 3 ngày gần nhất
+      - Hiển thị nút thao tác theo quyền
+    </allowed>
+    <notAllowed>
+      - Không làm luồng mời thành viên
+      - Không làm luồng đăng ký chơi
+      - Không làm tạo/sửa/xóa acc
+    </notAllowed>
+  </scope>
+
+  <hardRules>
+    <rule>Giữ thông tin ownership và status hiển thị rõ ràng.</rule>
+    <rule>Chỉ hiển thị nút thao tác khi user có quyền.</rule>
+    <rule>Responsive phải hoạt động trên desktop và mobile.</rule>
+  </hardRules>
+
+  <tasks>
+    <task>Xây dựng layout chi tiết account.</task>
+    <task>Render danh sách member và trạng thái member.</task>
+    <task>Render người đang giữ và trạng thái tổng quan của account.</task>
+    <task>Hiển thị 5 bản ghi lịch sử gần nhất mặc định.</task>
+    <task>Thêm nút "Xem thêm" để load toàn bộ lịch sử 3 ngày gần nhất.</task>
+  </tasks>
+
+  <constraints>
+    <constraint>Phần lịch sử phải hiển thị đúng 5 bản ghi mới nhất mặc định, sắp xếp theo created_at DESC.</constraint>
+    <constraint>Nút "Xem thêm" phải load toàn bộ lịch sử từ 3 ngày gần nhất khi click.</constraint>
+    <constraint>Nút thao tác phải disabled/ẩn khi user không có quyền.</constraint>
+    <constraint>Trạng thái member phải phân biệt rõ ràng bằng màu sắc hoặc icon badges.</constraint>
+  </constraints>
+
+  <acceptanceCriteria>
+    <criteria>Trang chi tiết hiển thị trạng thái acc, owner, người đang giữ và danh sách member.</criteria>
+    <criteria>5 bản ghi lịch sử gần nhất hiển thị mặc định.</criteria>
+    <criteria>Nút "Xem thêm" tồn tại và load toàn bộ lịch sử 3 ngày khi click.</criteria>
+    <criteria>Nút thao tác tuân theo quy tắc phân quyền.</criteria>
+  </acceptanceCriteria>
+
+  <testPlan>
+    <item>Mở chi tiết với các trạng thái account khác nhau.</item>
+    <item>Verify trạng thái member và hiển thị lịch sử.</item>
+    <item>Click nút "Xem thêm" và verify load lịch sử 3 ngày.</item>
+    <item>Kiểm tra hiển thị nút theo role.</item>
+    <item>Validate layout mobile và desktop.</item>
+  </testPlan>
+
+  <outputRequired>
+    <item>Màn hình chi tiết account</item>
+    <item>Hiển thị trạng thái member</item>
+    <item>Phần lịch sử gần đây</item>
+    <item>Thao tác theo quyền</item>
+  </outputRequired>
+</prompt>
