@@ -1,25 +1,31 @@
 import { Request, Response, NextFunction } from 'express';
+import { authCookieOptions, config } from '@/app/config';
 import { AuthService } from './auth.service';
 
 const authService = new AuthService();
 
 export class AuthController {
   // POST /api/v1/auth/signup
-  async signup(req: Request, res: Response, next: NextFunction) {
+  async signup(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
     try {
       const { email, password, displayName } = req.body;
 
       // Validation
       if (!email || !password || !displayName) {
-        return res.status(400).json({
+        res.status(400).json({
           success: false,
           message: 'Email, password và displayName là bắt buộc',
         });
+        return;
       }
 
       const user = await authService.signup({ email, password, displayName });
 
-      return res.status(201).json({
+      res.status(201).json({
         success: true,
         message: 'Đăng ký thành công',
         data: user,
@@ -30,29 +36,29 @@ export class AuthController {
   }
 
   // POST /api/v1/auth/login
-  async login(req: Request, res: Response, next: NextFunction) {
+  async login(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
     try {
       const { email, password } = req.body;
 
       // Validation
       if (!email || !password) {
-        return res.status(400).json({
+        res.status(400).json({
           success: false,
           message: 'Email và password là bắt buộc',
         });
+        return;
       }
 
       const result = await authService.login({ email, password });
 
-      // Set httpOnly cookie (7 ngày)
-      res.cookie('token', result.token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict',
-        maxAge: 7 * 24 * 60 * 60 * 1000, // 7 ngày
-      });
+      // Set httpOnly cookie from config (single source of truth)
+      res.cookie(config.cookie.name, result.token, authCookieOptions);
 
-      return res.json({
+      res.json({
         success: true,
         message: 'Đăng nhập thành công',
         data: {
@@ -65,18 +71,26 @@ export class AuthController {
   }
 
   // POST /api/v1/auth/logout
-  async logout(_req: Request, res: Response) {
-    // Clear cookie
-    res.clearCookie('token');
+  async logout(_req: Request, res: Response): Promise<void> {
+    // Clear with same options as set (required by some browsers)
+    res.clearCookie(config.cookie.name, {
+      httpOnly: authCookieOptions.httpOnly,
+      secure: authCookieOptions.secure,
+      sameSite: authCookieOptions.sameSite,
+    });
 
-    return res.json({
+    res.json({
       success: true,
       message: 'Đăng xuất thành công',
     });
   }
 
   // GET /api/v1/auth/me
-  async getMe(req: Request, res: Response, next: NextFunction) {
+  async getMe(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
     try {
       // req.user được set bởi auth middleware
       const userId = (req as any).user.userId;

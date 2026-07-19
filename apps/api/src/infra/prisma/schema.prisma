@@ -62,12 +62,17 @@ model Membership {
   memberStatus MemberStatus @default(IDLE) @map("member_status")
   joinedAt     DateTime     @default(now()) @map("joined_at")
   leftAt       DateTime?    @map("left_at")
+  /// When member entered PENDING_LOGOUT (end session). Used for 5-min email reminder.
+  pendingLogoutAt       DateTime? @map("pending_logout_at")
+  /// When logout-reminder email was sent (null = not yet).
+  logoutReminderSentAt  DateTime? @map("logout_reminder_sent_at")
 
   // Relations
   acc  Acc  @relation(fields: [accId], references: [id], onDelete: Cascade)
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([accId, userId])
+  @@index([memberStatus, pendingLogoutAt])
   @@map("memberships")
 }
 

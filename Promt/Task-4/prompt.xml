@@ -2,21 +2,22 @@
   <meta>
     <taskId>TASK-4</taskId>
     <title>Mời thành viên vào acc</title>
-    <estimatedTime>60-90m</estimatedTime>
+    <estimatedTime>90-120m</estimatedTime>
   </meta>
 
-  <goal>Xây dựng luồng mời thành viên có trạng thái chờ xác nhận, chỉ chuyển thành member sau khi chấp nhận.</goal>
-  <frsReference>docs/01_Requirements_FRS.md</frsReference>
-  <planReference>docs/02_Task_Breakdown.md</planReference>
-  <taskUnit>Invitation flow task</taskUnit>
+  <goal>Xây dựng luồng mời thành viên có trạng thái chờ xác nhận, chỉ chuyển thành member sau khi chấp nhận; gửi email thông báo lời mời và email welcome khi chấp nhận.</goal>
+  <frsReference>docs/workflow/01_Requirements_FRS.md</frsReference>
+  <planReference>docs/workflow/03_Task_Breakdown.md</planReference>
+  <taskUnit>Invitation flow + email notification task</taskUnit>
 
   <context>
-    Đọc section 6.4 (Mời thành viên vào acc) trong FRS.
-    Đọc section 6 (Quy ước chung) và Task 4 trong docs/02_Task_Breakdown.md để hiểu quy tắc 24h và 5 member.
-    Tập trung vào invitation pending/accepted/expired states.
+    Đọc section 6.4 (Mời thành viên vào acc) trong FRS — gồm email invitation và welcome.
+    Đọc section 6 (Quy ước chung) và Task 4 trong docs/workflow/03_Task_Breakdown.md để hiểu quy tắc 24h, 5 member và email SMTP.
+    Đọc architecture 6.3 Invitation + tech nodemailer.
+    Tập trung vào invitation pending/accepted/expired states và email.
     Không cho phép add thẳng member mà bỏ qua invitation.
     Không can thiệp sang play flow.
-    Nếu có source code, chỉ sửa các file trong features/invite-member/ và modules/invitations/, không sửa play-session hay acc CRUD.
+    Code chính: features/invite-member/, modules/invitations/, infra/email/.
   </context>
 
   <scope>
@@ -25,11 +26,15 @@
       - Hiển thị trạng thái lời mời chờ xác nhận
       - Cho phép người được mời chấp nhận lời mời
       - Ghi lịch sử lời mời và xác nhận
+      - Gửi email invitation khi tạo lời mời
+      - Gửi email welcome khi chấp nhận lời mời
+      - Cấu hình SMTP (Nodemailer) qua env
     </allowed>
     <notAllowed>
       - Không cho thêm thẳng thành viên mà bỏ qua lời mời
       - Không làm luồng kick thành viên
       - Không làm luồng đăng ký chơi
+      - Không làm email marketing / realtime push
     </notAllowed>
   </scope>
 
@@ -37,6 +42,9 @@
     <rule>Lời mời phải ở trạng thái pending cho đến khi được chấp nhận rõ ràng.</rule>
     <rule>Lời mời hết hạn sau 24 giờ nếu không được chấp nhận.</rule>
     <rule>Một account không được vượt quá 5 thành viên.</rule>
+    <rule>Khi gửi lời mời phải gửi email thông báo tới email người được mời.</rule>
+    <rule>Khi chấp nhận lời mời phải gửi email welcome tới người vừa accept.</rule>
+    <rule>Gửi email best-effort: lỗi SMTP không rollback invitation/membership; log lỗi.</rule>
   </hardRules>
 
   <tasks>
@@ -44,6 +52,9 @@
     <task>Hỗ trợ trạng thái pending và accepted.</task>
     <task>Đảm bảo user được chấp nhận chỉ trở thành member thật sau khi xác nhận.</task>
     <task>Ghi lịch sử invitation.</task>
+    <task>Implement EmailService (SMTP/Nodemailer) + template invitation &amp; welcome.</task>
+    <task>Gọi gửi email invitation sau khi tạo lời mời thành công.</task>
+    <task>Gọi gửi email welcome sau khi accept thành công.</task>
   </tasks>
 
   <constraints>
@@ -51,6 +62,8 @@
     <constraint>Giới hạn member không được vượt quá 5 thành viên bất cứ lúc nào.</constraint>
     <constraint>Lời mời pending không tính vào giới hạn 5 member cho đến khi được chấp nhận.</constraint>
     <constraint>Chỉ chủ phòng mới có thể gửi lời mời.</constraint>
+    <constraint>Email invitation và welcome dùng SMTP qua env (SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, MAIL_FROM).</constraint>
+    <constraint>Khi EMAIL_ENABLED=false (dev), log nội dung email thay vì gửi SMTP thật.</constraint>
   </constraints>
 
   <acceptanceCriteria>
@@ -58,6 +71,8 @@
     <criteria>Lời mời được chấp nhận tạo thành member thật.</criteria>
     <criteria>Lời mời chưa chấp nhận hết hạn sau 24 giờ.</criteria>
     <criteria>Giới hạn member duy trì trong phạm vi 5 người.</criteria>
+    <criteria>Tạo lời mời kích hoạt gửi email invitation tới đúng địa chỉ.</criteria>
+    <criteria>Accept lời mời kích hoạt gửi email welcome.</criteria>
   </acceptanceCriteria>
 
   <testPlan>
@@ -65,11 +80,16 @@
     <item>Chấp nhận lời mời và verify membership được tạo.</item>
     <item>Kiểm tra hành vi lời mời expired sau 24 giờ.</item>
     <item>Verify giới hạn 5 member được enforce.</item>
+    <item>Cấu hình SMTP test: tạo lời mời → nhận email invitation.</item>
+    <item>Accept → nhận email welcome.</item>
+    <item>EMAIL_ENABLED=false → invitation vẫn tạo, log email trong console.</item>
   </testPlan>
 
   <outputRequired>
     <item>Luồng mời</item>
     <item>Trạng thái pending/accepted/expired</item>
     <item>Lịch sử ghi nhận các hành động invitation</item>
+    <item>Email invitation + email welcome</item>
+    <item>infra/email + env SMTP documented</item>
   </outputRequired>
 </prompt>

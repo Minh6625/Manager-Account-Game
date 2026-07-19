@@ -88,10 +88,15 @@ Mọi trạng thái đều do người dùng khai báo thủ công trên web.
 
 ### 6.4. Mời thành viên vào acc
 
-- Chủ phòng có thể gửi lời mời thành viên vào acc.
+- Chủ phòng có thể gửi lời mời thành viên vào acc (theo email).
 - Lời mời phải ở trạng thái chờ xác nhận cho đến khi người được mời đồng ý.
 - Chỉ sau khi người được mời xác nhận chấp nhận lời mời thì người đó mới trở thành thành viên trong acc.
 - Lịch sử mời thành viên và lịch sử xác nhận lời mời phải được ghi lại.
+- **Thông báo email bắt buộc trong luồng mời:**
+  - Khi chủ phòng **gửi lời mời**, hệ thống phải gửi **email thông báo lời mời** tới địa chỉ email người được mời (nội dung gồm tên acc, người mời, hạn xác nhận 24 giờ, hướng dẫn vào web để chấp nhận/từ chối).
+  - Khi người được mời **chấp nhận lời mời**, hệ thống phải gửi **email chào mừng (welcome)** tới email của họ (nội dung xác nhận đã trở thành thành viên, tên acc).
+  - Email là kênh bổ sung; người dùng vẫn thao tác accept/reject trên web (in-app). Không thay thế xác nhận trên web bằng link one-click bắt buộc trong MVP.
+  - Nếu cấu hình SMTP chưa sẵn sàng ở môi trường dev, hệ thống có thể log nội dung email thay vì gửi thật, nhưng production phải gửi được email thật.
 
 ### 6.5. Kick thành viên
 
@@ -206,7 +211,8 @@ Mọi trạng thái đều do người dùng khai báo thủ công trên web.
 - Không tích hợp trực tiếp với game.
 - Không xác minh tự động việc người dùng có thật sự đang online trong game.
 - Không làm hệ thống bảo mật phức tạp.
-- Không cần notification nâng cao hoặc realtime phức tạp ngay từ đầu.
+- Không cần notification nâng cao hoặc realtime phức tạp ngoài email mời/welcome của luồng invitation.
+- Không làm realtime push/websocket ngay từ đầu.
 - Không cần cơ chế đăng nhập đa lớp hoặc bảo mật doanh nghiệp, nhưng vẫn phải có ghi nhớ đăng nhập cơ bản cho trải nghiệm trên cả desktop web và mobile web.
 - Không làm chức năng thanh toán, nạp tiền, hoặc quản lý tài khoản game thật.
 
@@ -220,6 +226,8 @@ Mọi trạng thái đều do người dùng khai báo thủ công trên web.
 - Chủ phòng có thể tạo, sửa, xóa acc.
 - Chủ phòng có thể mời thành viên vào acc.
 - Lời mời phải chờ người dùng xác nhận trước khi người đó trở thành thành viên trong acc.
+- Khi gửi lời mời, hệ thống gửi email thông báo tới người được mời.
+- Khi người được mời chấp nhận, hệ thống gửi email welcome.
 - Chủ phòng có thể kick thành viên.
 - Khi có người đang chơi, người khác không thể đăng ký chồng lên.
 - Khi kết thúc chơi, hệ thống hỏi xác nhận đã log out.

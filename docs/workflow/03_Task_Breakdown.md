@@ -584,6 +584,7 @@ packages/shared/
 
 - Chủ phòng có thể mời thành viên vào acc.
 - Lời mời phải chờ xác nhận trước khi người được mời trở thành thành viên.
+- Gửi email thông báo thật khi mời và email welcome khi chấp nhận.
 
 **Scope được phép**
 
@@ -591,12 +592,16 @@ packages/shared/
 - Hiển thị trạng thái lời mời chờ xác nhận.
 - Cho phép người được mời chấp nhận lời mời.
 - Ghi lịch sử lời mời và xác nhận.
+- Gửi email invitation tới người được mời khi tạo lời mời.
+- Gửi email welcome khi lời mời được chấp nhận.
+- Cấu hình SMTP (Nodemailer) + template email tối giản.
 
 **Scope không được làm**
 
 - Không cho thêm thẳng thành viên mà bỏ qua lời mời.
 - Không làm luồng kick thành viên.
 - Không làm luồng đăng ký chơi.
+- Không làm email marketing / digest / realtime push.
 
 **Output cần có**
 
@@ -604,6 +609,8 @@ packages/shared/
 - Trạng thái accepted sau khi xác nhận.
 - Người được mời chỉ trở thành member sau khi chấp nhận.
 - Trạng thái member sau khi chấp nhận phải xuất hiện trong danh sách thành viên của acc.
+- Email invitation được gửi (hoặc log rõ khi SMTP dev tắt).
+- Email welcome được gửi sau accept.
 
 **Acceptance Criteria**
 
@@ -613,6 +620,8 @@ packages/shared/
 - Lời mời hết hạn sau 24 giờ nếu chưa xác nhận.
 - Mỗi acc không vượt quá 5 member.
 - Lịch sử mời và xác nhận được lưu lại.
+- Email thông báo lời mời tới đúng địa chỉ được mời.
+- Email welcome tới người vừa accept.
 
 **Test Plan**
 
@@ -620,10 +629,12 @@ packages/shared/
 - Xác nhận lời mời và kiểm tra member được thêm.
 - Kiểm tra trường hợp lời mời chưa xác nhận thì không xuất hiện như member chính thức.
 - Kiểm tra lời mời hết hạn sau 24 giờ.
+- Cấu hình SMTP test: tạo lời mời → nhận email invitation.
+- Accept lời mời → nhận email welcome.
 
 **Ước lượng**
 
-- 60–90 phút
+- 90–120 phút (gồm email)
 
 ### Task 5 - Luồng đăng ký chơi và xác nhận log out
 

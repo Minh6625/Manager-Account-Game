@@ -68,10 +68,10 @@
 
 ---
 
-## ⏳ Task 3: Account Detail
+## ✅ Task 3: Account Detail
 
-**Status:** 🔜 Planned  
-**Date:** TBD
+**Status:** ✅ Complete  
+**Date:** 2026-07-10 (approx.)
 
 **Mục tiêu:** Trang chi tiết tài khoản
 
@@ -80,63 +80,86 @@
 - Account info display
 - Member list
 - Status history
-- Action buttons
+- Action buttons placeholders by role
 
-**Documentation:** [→ task-3/](./task-3/) (chưa tạo)
+**Documentation:** [→ task-3/](./task-3/)
 
 ---
 
-## ⏳ Task 4: Invitation System
+## ✅ Task 4: Invitation System
 
-**Status:** 🔜 Planned  
-**Date:** TBD
+**Status:** ✅ Complete  
+**Date:** 2026-07-12
 
 **Mục tiêu:** Mời thành viên vào tài khoản
 
 **Features:**
 
-- Send invitation
+- Send invitation (owner, by email)
 - Accept/reject invitation
-- 24h expiry
-- Invitation list
+- 24h expiry (lazy)
+- Pending does not count toward 5 members
+- Invitation list + my pending panel
+- History INVITE_* / MEMBER_JOIN
 
-**Documentation:** [→ task-4/](./task-4/) (chưa tạo)
+**Documentation:** [→ task-4/](./task-4/)
 
 ---
 
-## ⏳ Task 5: Play Session Management
+## ✅ Task 5: Play Session Management
 
-**Status:** 🔜 Planned  
-**Date:** TBD
+**Status:** ✅ Complete  
+**Date:** 2026-07-13
 
 **Mục tiêu:** Quản lý phiên chơi
 
 **Features:**
 
-- Start playing
-- End session
-- Confirm logout
-- Status tracking
+- Start playing when AVAILABLE
+- Block when held by another member
+- End session → PENDING_LOGOUT
+- Confirm logout → AVAILABLE
+- Owner force reset
+- Status history for all transitions
 
-**Documentation:** [→ task-5/](./task-5/) (chưa tạo)
+**Documentation:** [→ task-5/](./task-5/)
 
 ---
 
-## ⏳ Task 6: CRUD Accounts
+## ✅ Task 6: CRUD Accounts
 
-**Status:** 🔜 Planned  
-**Date:** TBD
+**Status:** ✅ Complete  
+**Date:** 2026-07-14  
+**Time:** ~75 phút
 
-**Mục tiêu:** Tạo, sửa, xóa tài khoản và kick members
+**Mục tiêu:** Chủ phòng sửa/xóa acc (tạo acc đã có từ Task 2); skeleton kick
 
 **Features:**
 
-- Create account
-- Update account info
-- Delete account
-- Kick members
+- Update account (name, note) — owner only
+- Delete account + confirm modal — owner only
+- Kick API/UI baseline
+- History CREATE / UPDATE / DELETE / MEMBER_KICK
 
-**Documentation:** [→ task-6/](./task-6/) (chưa tạo)
+**Documentation:** [→ task-6/](./task-6/)
+
+---
+
+## ✅ Task 7: Kick Members
+
+**Status:** ✅ Complete  
+**Date:** 2026-07-14  
+**Time:** ~40 phút
+
+**Mục tiêu:** Chuẩn hóa kick thành viên theo AC Task 7
+
+**Features:**
+
+- Owner-only kick + confirm modal + holder warning
+- `KICKED` + `leftAt`; mất quyền ngay; không giữ thẻ KICKED trên list
+- History actor + note người bị kick
+
+**Documentation:** [→ task-7/](./task-7/)
 
 ---
 
@@ -147,12 +170,13 @@
 | Task 0: Architecture   | ✅     | 60m  | 12    | ~800 |
 | Task 1: Authentication | ✅     | 45m  | 8     | ~500 |
 | Task 2: Account List   | ✅     | 60m  | 9     | ~500 |
-| Task 3: Account Detail | 🔜     | -    | -     | -    |
-| Task 4: Invitation     | 🔜     | -    | -     | -    |
-| Task 5: Play Session   | 🔜     | -    | -     | -    |
-| Task 6: CRUD           | 🔜     | -    | -     | -    |
+| Task 3: Account Detail | ✅     | ~75m | -     | -    |
+| Task 4: Invitation     | ✅     | -    | -     | -    |
+| Task 5: Play Session   | ✅     | ~75m | ~12   | ~900 |
+| Task 6: CRUD           | ✅     | ~75m | ~15   | ~900 |
+| Task 7: Kick           | ✅     | ~40m | ~8    | ~300 |
 
-**Total Completed:** 3/7 tasks (43%)
+**Total Completed:** 8/8 tasks (MVP core done)
 
 ---
 
@@ -177,16 +201,16 @@ task-X/
 
 ### By Status
 
-- **Completed:** [Task 0](./task-0/), [Task 1](./task-1/), [Task 2](./task-2/)
+- **Completed:** [Task 0](./task-0/), [Task 1](./task-1/), [Task 2](./task-2/), [Task 3](./task-3/), [Task 4](./task-4/), [Task 5](./task-5/), [Task 6](./task-6/), [Task 7](./task-7/)
 - **In Progress:** None
-- **Planned:** Task 3-6
+- **Planned:** None (MVP core)
 
 ### By Type
 
 - **Auth:** [Task 1](./task-1/)
 - **UI/List:** [Task 2](./task-2/)
-- **Detail/CRUD:** Task 3, Task 6
-- **Features:** Task 4, Task 5
+- **Detail/CRUD:** [Task 3](./task-3/), [Task 6](./task-6/), [Task 7](./task-7/)
+- **Features:** [Task 4](./task-4/), [Task 5](./task-5/)
 
 ---
 
@@ -208,8 +232,8 @@ task-X/
 ---
 
 **Created:** 2026-07-08  
-**Last Updated:** 2026-07-10  
-**Next Task:** Task 3 - Account Detail
+**Last Updated:** 2026-07-14  
+**Next Task:** Polish / deploy / post-MVP (email, realtime, …)
 
 ---
 
@@ -219,3 +243,6 @@ task-X/
 | ---------- | -------- | -------------------------------------------- |
 | 2026-07-08 | AI Agent | Initial creation                             |
 | 2026-07-10 | AI Agent | Task 2 completed - Account list with filters |
+| 2026-07-13 | AI Agent | Task 5 completed - Play session management   |
+| 2026-07-14 | AI Agent | Task 6 completed - CRUD acc + kick baseline  |
+| 2026-07-14 | AI Agent | Task 7 completed - Kick member (full AC)     |

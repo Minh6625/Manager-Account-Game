@@ -1,0 +1,84 @@
+<prompt>
+  <meta>
+    <taskId>TASK-7</taskId>
+    <title>Kick thanh vien</title>
+    <estimatedTime>30-45m</estimatedTime>
+  </meta>
+
+  <goal>Chu phong co the loai thanh vien ra khoi acc/phong dung quyen va co xac nhan.</goal>
+  <frsReference>docs/workflow/01_Requirements_FRS.md</frsReference>
+  <planReference>docs/workflow/03_Task_Breakdown.md</planReference>
+  <taskUnit>Kick member task</taskUnit>
+
+  <context>
+    Doc FRS section 6.5 (Kick thanh vien) va section 8.7.
+    Doc Task 7 trong docs/workflow/03_Task_Breakdown.md.
+    Task 6 da co nen CRUD + skeleton kick; Task 7 chuan hoa day du luong kick theo AC.
+    Chi sua modules/memberships/, modules/accs/ (doc members neu can), features/acc-management/.
+    Khong sua invitation, play-session, CRUD update/delete acc (tru khi can de hien thi KICKED).
+  </context>
+
+  <scope>
+    <allowed>
+      - Kick thanh vien ra khoi acc
+      - Hien thi/an nut kick theo quyen chu phong
+      - Modal xac nhan truoc khi kick
+      - Cap nhat trang thai member sang KICKED
+      - Ghi lich su kick (thoi diem + nguoi thuc hien)
+      - Canh bao ro neu member dang choi hoac cho xac nhan logout
+      - Member bi kick mat quyen thao tac ngay
+      - Hien thi trang thai da kick tren danh sach member (neu con trong detail)
+    </allowed>
+    <notAllowed>
+      - Khong lam CRUD acc (Task 6)
+      - Khong lam moi thanh vien (Task 4)
+      - Khong lam trang thai choi (Task 5)
+      - Khong add thang member
+    </notAllowed>
+  </scope>
+
+  <hardRules>
+    <rule>Chi owner moi thay va dung duoc nut kick.</rule>
+    <rule>Moi lan kick bat buoc dialog xac nhan truoc khi goi API.</rule>
+    <rule>Khong cho kick chu phong (OWNER).</rule>
+    <rule>Member bi kick mat quyen truy cap acc ngay (leftAt + KICKED).</rule>
+    <rule>Neu dang PLAYING/PENDING_LOGOUT van kick duoc, UI canh bao, acc tra ve AVAILABLE.</rule>
+  </hardRules>
+
+  <tasks>
+    <task>Dam bao API DELETE /api/v1/accs/:id/members/:memberId dung owner check va KICKED.</task>
+    <task>Ghi status_history MEMBER_KICK voi timestamp va actor (nguoi kick) trong note/user.</task>
+    <task>UI nut Kick chi owner; modal xac nhan; canh bao khi dang giu acc.</task>
+    <task>Cap nhat UI trang thai sau kick; member bi kick khong thao tac duoc.</task>
+  </tasks>
+
+  <constraints>
+    <constraint>Chi chu phong kick duoc.</constraint>
+    <constraint>Hanh dong kick phai co dialog xac nhan.</constraint>
+    <constraint>Lich su kick phai co thoi diem va nguoi thuc hien.</constraint>
+    <constraint>Khong mo rong sang invitation hay play flow.</constraint>
+  </constraints>
+
+  <acceptanceCriteria>
+    <criteria>Chi chu phong thay va dung nut kick.</criteria>
+    <criteria>Thanh vien bi kick khong con quyen thao tac trong acc do.</criteria>
+    <criteria>Kick phai xac nhan ro rang truoc khi thuc thi.</criteria>
+    <criteria>Kick member dang choi / cho logout van duoc, co canh bao ro.</criteria>
+    <criteria>Lich su kick ghi dung thoi diem va nguoi thuc hien.</criteria>
+  </acceptanceCriteria>
+
+  <testPlan>
+    <item>So sanh nut kick owner vs member thuong.</item>
+    <item>Kick + modal xac nhan.</item>
+    <item>Member bi kick khong mo detail / khong play.</item>
+    <item>Kick member dang PLAYING: acc AVAILABLE, history ok.</item>
+    <item>History hien thi actor va thoi gian.</item>
+  </testPlan>
+
+  <outputRequired>
+    <item>Luong kick member hoan chinh (API + UI)</item>
+    <item>Modal xac nhan + canh bao holder</item>
+    <item>History MEMBER_KICK co actor</item>
+    <item>docs/tasks_report/task-7/</item>
+  </outputRequired>
+</prompt>

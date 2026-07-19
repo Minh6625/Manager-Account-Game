@@ -1,6 +1,18 @@
 import { prisma } from '@/infra/db/prisma';
-import { CreateAccDto } from './acc.schemas';
+import { CreateAccDto, UpdateAccDto } from './acc.schemas';
 import { BadRequestError } from '@/shared/errors/AppError';
+
+const ownerSelect = {
+  id: true,
+  email: true,
+  displayName: true,
+} as const;
+
+const userSelect = {
+  id: true,
+  email: true,
+  displayName: true,
+} as const;
 
 export class AccRepository {
   async getAccountsByUserId(userId: string) {
@@ -21,27 +33,20 @@ export class AccRepository {
       },
       include: {
         owner: {
-          select: {
-            id: true,
-            email: true,
-            displayName: true,
-          },
+          select: ownerSelect,
         },
         memberships: {
           where: {
             leftAt: null,
-            memberStatus: 'PLAYING',
+            // Holder = đang chơi hoặc chờ đăng xuất acc (vẫn chưa trả acc)
+            memberStatus: { in: ['PLAYING', 'PENDING_LOGOUT'] },
           },
           include: {
             user: {
-              select: {
-                id: true,
-                email: true,
-                displayName: true,
-              },
+              select: userSelect,
             },
           },
-          take: 1, // Only get current player if any
+          take: 1,
         },
         _count: {
           select: {
@@ -59,6 +64,15 @@ export class AccRepository {
     });
 
     return accounts;
+  }
+
+  async findById(accId: string) {
+    return prisma.acc.findUnique({
+      where: { id: accId },
+      include: {
+        owner: { select: ownerSelect },
+      },
+    });
   }
 
   async createAccount(userId: string, data: CreateAccDto) {
@@ -91,11 +105,7 @@ export class AccRepository {
       },
       include: {
         owner: {
-          select: {
-            id: true,
-            email: true,
-            displayName: true,
-          },
+          select: ownerSelect,
         },
         memberships: {
           where: {
@@ -103,11 +113,7 @@ export class AccRepository {
           },
           include: {
             user: {
-              select: {
-                id: true,
-                email: true,
-                displayName: true,
-              },
+              select: userSelect,
             },
           },
         },
@@ -118,6 +124,101 @@ export class AccRepository {
                 leftAt: null,
               },
             },
+          },
+        },
+      },
+    });
+
+    return account;
+  }
+
+  async updateAccount(accId: string, data: UpdateAccDto) {
+    if (data.name !== undefined) {
+      const existingAcc = await prisma.acc.findFirst({
+        where: {
+          name: data.name,
+          NOT: { id: accId },
+        },
+      });
+
+      if (existingAcc) {
+        throw new BadRequestError('Tên tài khoản đã tồn tại');
+      }
+    }
+
+    const updateData: { name?: string; note?: string | null } = {};
+    if (data.name !== undefined) {
+      updateData.name = data.name;
+    }
+    if (data.note !== undefined) {
+      updateData.note = data.note;
+    }
+
+    return prisma.acc.update({
+      where: { id: accId },
+      data: updateData,
+      include: {
+        owner: {
+          select: ownerSelect,
+        },
+        memberships: {
+          where: {
+            leftAt: null,
+          },
+          include: {
+            user: {
+              select: userSelect,
+            },
+          },
+          orderBy: {
+            joinedAt: 'asc',
+          },
+        },
+      },
+    });
+  }
+
+  async deleteAccount(accId: string) {
+    // Cascade removes memberships, invitations, status_history
+    return prisma.acc.delete({
+      where: { id: accId },
+    });
+  }
+
+  async getAccountById(accId: string, userId: string) {
+    // Account detail with members only (active).
+    // Kicked members are not listed — audit is in status_history (MEMBER_KICK).
+    const account = await prisma.acc.findFirst({
+      where: {
+        id: accId,
+        OR: [
+          { ownerUserId: userId },
+          {
+            memberships: {
+              some: {
+                userId: userId,
+                leftAt: null,
+              },
+            },
+          },
+        ],
+      },
+      include: {
+        owner: {
+          select: ownerSelect,
+        },
+        memberships: {
+          where: {
+            leftAt: null,
+            memberStatus: { not: 'KICKED' },
+          },
+          include: {
+            user: {
+              select: userSelect,
+            },
+          },
+          orderBy: {
+            joinedAt: 'asc',
           },
         },
       },

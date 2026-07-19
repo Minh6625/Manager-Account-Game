@@ -1,6 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import { SESSION_DAYS } from '@manager-acc/shared';
 import { BadRequestError, UnauthorizedError } from '@/shared/errors/AppError';
 import { config } from '@/app/config';
 
@@ -92,7 +93,7 @@ export class AuthService {
   // Generate JWT token
   private generateToken(payload: JwtPayload): string {
     return jwt.sign(payload, config.jwt.secret, {
-      expiresIn: '7d', // 7 ngày
+      expiresIn: `${SESSION_DAYS}d`,
     });
   }
 

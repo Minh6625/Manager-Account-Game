@@ -1,0 +1,86 @@
+/**
+ * Design tokens ported from meu-ecom-solution-frontend (industrial navy).
+ * HSL channels (space-separated) so Tailwind opacity modifiers work.
+ */
+:root {
+  --radius: 0.5rem;
+
+  --background: 0 0% 100%;
+  --foreground: 222 20% 18%;
+
+  --card: 0 0% 100%;
+  --card-foreground: 222 20% 18%;
+
+  --popover: 0 0% 100%;
+  --popover-foreground: 222 20% 18%;
+
+  /* #0B3A6E navy industrial */
+  --primary: 209 82% 24%;
+  --primary-foreground: 0 0% 100%;
+
+  --secondary: 214 32% 96%;
+  --secondary-foreground: 222 20% 18%;
+
+  --muted: 214 32% 96%;
+  --muted-foreground: 215 14% 46%;
+
+  /* #E8F1FA cool accent */
+  --accent: 210 50% 95%;
+  --accent-foreground: 209 82% 24%;
+
+  --destructive: 0 72% 51%;
+  --destructive-foreground: 0 0% 100%;
+
+  /* #D8DEE6 catalog border */
+  --border: 214 20% 87%;
+  --input: 214 20% 87%;
+  --ring: 209 82% 24%;
+
+  --success: 142 71% 35%;
+  --success-foreground: 0 0% 100%;
+  --warning: 38 92% 50%;
+  --warning-foreground: 0 0% 100%;
+
+  --sidebar: 220 20% 97%;
+  --sidebar-foreground: 222 20% 18%;
+  --sidebar-primary: 209 82% 24%;
+  --sidebar-primary-foreground: 0 0% 100%;
+  --sidebar-accent: 210 50% 95%;
+  --sidebar-accent-foreground: 209 82% 24%;
+  --sidebar-border: 214 20% 87%;
+  --sidebar-ring: 209 82% 24%;
+}
+
+.dark {
+  --background: 240 6% 10%;
+  --foreground: 0 0% 98%;
+  --card: 240 5% 14%;
+  --card-foreground: 0 0% 98%;
+  --popover: 240 5% 14%;
+  --popover-foreground: 0 0% 98%;
+  --primary: 210 70% 58%;
+  --primary-foreground: 222 40% 12%;
+  --secondary: 240 4% 20%;
+  --secondary-foreground: 0 0% 98%;
+  --muted: 240 4% 20%;
+  --muted-foreground: 240 5% 65%;
+  --accent: 220 20% 22%;
+  --accent-foreground: 210 50% 95%;
+  --destructive: 0 62% 55%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 240 4% 22%;
+  --input: 240 4% 26%;
+  --ring: 210 70% 58%;
+  --success: 142 60% 45%;
+  --success-foreground: 0 0% 100%;
+  --warning: 38 92% 55%;
+  --warning-foreground: 0 0% 10%;
+  --sidebar: 240 5% 14%;
+  --sidebar-foreground: 0 0% 98%;
+  --sidebar-primary: 210 70% 58%;
+  --sidebar-primary-foreground: 222 40% 12%;
+  --sidebar-accent: 220 20% 22%;
+  --sidebar-accent-foreground: 210 50% 95%;
+  --sidebar-border: 240 4% 22%;
+  --sidebar-ring: 210 70% 58%;
+}

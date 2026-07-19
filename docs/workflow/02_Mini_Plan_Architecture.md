@@ -113,6 +113,7 @@ Manager_Account_Lienquan/
 | **Prisma**       | 5+      | Type-safe ORM, migration, PostgreSQL |
 | **bcrypt**       | Latest  | Password hashing                     |
 | **jsonwebtoken** | Latest  | JWT authentication                   |
+| **nodemailer**   | Latest  | Gửi email invitation + welcome (SMTP) |
 
 **Deploy:** Vercel Serverless hoặc Railway
 
@@ -338,6 +339,12 @@ apps/api/src/
 - ✅ 24 giờ expiry
 - ✅ Pending không tính vào member limit
 - ✅ Chỉ owner mới invite được
+- ✅ **Email notification (SMTP):**
+  - Gửi email **invitation** khi tạo lời mời (tới `invited_email`)
+  - Gửi email **welcome** khi accept thành công
+  - Provider: **Nodemailer + SMTP** (env: `SMTP_*`, `MAIL_FROM`)
+  - Module: `apps/api/src/infra/email/`
+  - Gửi best-effort: lỗi SMTP không rollback invitation/membership (log lỗi); in-app flow vẫn là nguồn sự thật
 
 ### 6.4. Membership
 

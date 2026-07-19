@@ -4,9 +4,9 @@ import { config } from '../config'
 
 export const errorHandler = (
   err: Error,
-  req: Request,
+  _req: Request,
   res: Response,
-  next: NextFunction
+  _next: NextFunction
 ) => {
   // Handle AppError instances
   if (err instanceof AppError) {
@@ -28,10 +28,12 @@ export const errorHandler = (
 
   // Handle validation errors (Zod)
   if (err.name === 'ZodError') {
+    const issues = (err as { issues?: Array<{ message: string }> }).issues
+    const firstMessage = issues?.[0]?.message
     return res.status(422).json({
       success: false,
-      message: 'Validation error',
-      errors: (err as any).errors,
+      message: firstMessage || 'Validation error',
+      errors: issues,
     })
   }
 

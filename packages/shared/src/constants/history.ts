@@ -1,0 +1,24 @@
+/**
+ * status_history.actionType values used across modules.
+ * Keep in sync with FE formatHistoryAction.
+ */
+export const HISTORY_ACTION = {
+  CREATE: 'CREATE',
+  UPDATE: 'UPDATE',
+  DELETE: 'DELETE',
+  STATUS_CHANGE: 'STATUS_CHANGE',
+  START_PLAY: 'START_PLAY',
+  END_PLAY: 'END_PLAY',
+  CONFIRM_LOGOUT: 'CONFIRM_LOGOUT',
+  FORCE_RESET: 'FORCE_RESET',
+  LOGOUT_REMINDER: 'LOGOUT_REMINDER',
+  MEMBER_JOIN: 'MEMBER_JOIN',
+  MEMBER_KICK: 'MEMBER_KICK',
+  INVITE_SENT: 'INVITE_SENT',
+  INVITE_ACCEPTED: 'INVITE_ACCEPTED',
+  INVITE_REJECTED: 'INVITE_REJECTED',
+  INVITE_EXPIRED: 'INVITE_EXPIRED',
+} as const;
+
+export type HistoryActionType =
+  (typeof HISTORY_ACTION)[keyof typeof HISTORY_ACTION];

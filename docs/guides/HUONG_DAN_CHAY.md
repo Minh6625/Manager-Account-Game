@@ -49,6 +49,22 @@ npm run prisma:push
 
 ---
 
+## Email (lời mời + welcome)
+
+Copy biến từ `apps/api/.env.example` vào `apps/api/.env`.
+
+| Chế độ | Cấu hình | Hành vi |
+|--------|----------|---------|
+| Dev (mặc định) | `EMAIL_ENABLED=false` hoặc không set `SMTP_HOST` | Log nội dung email ra console API |
+| Gửi thật | `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `MAIL_FROM` | Nodemailer gửi SMTP |
+
+- Khi **mời thành viên** → email invitation tới email được mời  
+- Khi **chấp nhận** → email welcome  
+
+Link trong email dùng `FRONTEND_URL` (vd. `http://localhost:5173`).
+
+---
+
 ## Bước 3: Chạy API Server
 
 **Mở terminal thứ nhất:**

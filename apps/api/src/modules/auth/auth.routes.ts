@@ -8,7 +8,9 @@ const authController = new AuthController();
 // Public routes
 router.post('/signup', (req, res, next) => authController.signup(req, res, next));
 router.post('/login', (req, res, next) => authController.login(req, res, next));
-router.post('/logout', (req, res, next) => authController.logout(req, res));
+router.post('/logout', (req, res) => {
+  void authController.logout(req, res);
+});
 
 // Protected routes
 router.get('/me', authMiddleware, (req, res, next) => authController.getMe(req, res, next));

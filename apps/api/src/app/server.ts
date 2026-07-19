@@ -16,7 +16,7 @@ app.use(cookieParser())
 // ========== ROUTES ==========
 
 // Health check
-app.get('/health', async (req: Request, res: Response) => {
+app.get('/health', async (_req: Request, res: Response) => {
   try {
     // Test database connection
     await prisma.$queryRaw`SELECT 1`
@@ -39,8 +39,10 @@ app.get('/health', async (req: Request, res: Response) => {
 // API routes
 import authRoutes from '../modules/auth/auth.routes'
 import accRoutes from '../modules/accs/acc.routes'
+import historyRoutes from '../modules/history/history.routes'
+import invitationMineRoutes from '../modules/invitations/invitation.mine.routes'
 
-app.get('/api/v1', (req: Request, res: Response) => {
+app.get('/api/v1', (_req: Request, res: Response) => {
   res.json({
     success: true,
     message: 'Manager Account Liên Quân API v1',
@@ -54,8 +56,18 @@ app.use('/api/v1/auth', authRoutes)
 // Account routes
 app.use('/api/v1/accs', accRoutes)
 
+// History routes (domain module — GET /api/v1/history?acc_id=)
+app.use('/api/v1/history', historyRoutes)
+
+// Invitations for current user (pending list)
+app.use('/api/v1/invitations', invitationMineRoutes)
+
+// Background: email reminder if still PENDING_LOGOUT after 5 minutes
+import { logoutReminderJob } from '../modules/play-session/logout-reminder.job'
+logoutReminderJob.start()
+
 // 404 handler
-app.use((req: Request, res: Response) => {
+app.use((_req: Request, res: Response) => {
   res.status(404).json({
     success: false,
     message: 'Route not found',
@@ -81,12 +93,14 @@ app.listen(PORT, () => {
 // Graceful shutdown
 process.on('SIGTERM', async () => {
   console.log('SIGTERM received, closing server gracefully...')
+  logoutReminderJob.stop()
   await prisma.$disconnect()
   process.exit(0)
 })
 
 process.on('SIGINT', async () => {
   console.log('SIGINT received, closing server gracefully...')
+  logoutReminderJob.stop()
   await prisma.$disconnect()
   process.exit(0)
 })
