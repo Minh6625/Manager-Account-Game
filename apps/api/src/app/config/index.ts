@@ -14,10 +14,14 @@ const emailEnabled =
       ? false
       : Boolean(smtpHost)
 
+const nodeEnv = process.env.NODE_ENV || 'development'
+const isProd = nodeEnv === 'production'
+const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173'
+
 export const config = {
   port: parseInt(process.env.PORT || '3000', 10),
-  nodeEnv: process.env.NODE_ENV || 'development',
-  frontendUrl: process.env.FRONTEND_URL || 'http://localhost:5173',
+  nodeEnv,
+  frontendUrl,
 
   database: {
     url: process.env.DATABASE_URL || '',
@@ -29,19 +33,24 @@ export const config = {
   },
 
   cors: {
-    origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+    // Must match Vercel URL exactly when FE and API are on different domains
+    origin: frontendUrl,
     credentials: true,
   },
 
   /**
-   * Single source of truth for auth cookie.
-   * Used by login (set), logout (clear), and authMiddleware (read).
+   * Auth cookie — single source of truth (login set / logout clear / middleware read).
+   *
+   * Production (Vercel FE + Render API = cross-site):
+   *   sameSite: 'none' + secure: true  — required for credentials: 'include'
+   * Local (same-site proxy or localhost):
+   *   sameSite: 'lax' + secure: false
    */
   cookie: {
     name: 'token',
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'strict' as const,
+    secure: isProd,
+    sameSite: (isProd ? 'none' : 'lax') as 'none' | 'lax',
     maxAge: SESSION_DAYS * 24 * 60 * 60 * 1000,
   },
 
