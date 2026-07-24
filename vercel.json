@@ -1,13 +1,17 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
+  "version": 2,
   "installCommand": "npm install",
   "buildCommand": "npm run build -w @manager-acc/shared && npm run prisma:generate -w @manager-acc/api && npm run build -w @manager-acc/api && npm run build -w @manager-acc/web",
   "outputDirectory": "apps/web/dist",
-  "framework": "vite",
-  "rewrites": [
+  "routes": [
     {
-      "source": "/((?!api).*)",
-      "destination": "/index.html"
+      "src": "/api/(.*)",
+      "dest": "/api/index.js"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
     }
   ]
 }

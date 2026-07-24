@@ -1,0 +1,15 @@
+Fix: Update .vercelignore to keep source files for build
+
+The previous .vercelignore was removing apps/api/src which contains
+the Prisma schema file needed for prisma generate during build.
+
+Updated to only ignore:
+- Documentation (docs, Promt)
+- Test files
+- IDE config
+- Build artifacts (will be regenerated)
+
+Keep source files needed for:
+- Prisma schema generation
+- TypeScript compilation
+- Vercel serverless functions

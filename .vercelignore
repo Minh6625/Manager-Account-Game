@@ -1,24 +1,32 @@
-# Development files
+# Git
 .git
-.env.local
+
+# Logs
 *.log
+npm-debug.log*
+
+# Environment files (set in Vercel dashboard)
+.env
+.env.local
+.env.production
 
 # Documentation
-docs
-Promt
+docs/
+Promt/
 *.md
-!VERCEL_DEPLOYMENT.md
 !README.md
 
 # Test files
 **/*.test.ts
+**/*.test.js
 **/*.spec.ts
+**/*.spec.js
 
 # IDE
-.vscode
-.idea
+.vscode/
+.idea/
 *.swp
 *.swo
 
-# Only web dist (will be regenerated), keep API dist for serverless function
+# Only web dist (regenerated), keep API dist for serverless
 apps/web/dist
