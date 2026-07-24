@@ -2,48 +2,80 @@
  * Post-build script to add .js extensions to ESM imports
  * Fixes: ERR_UNSUPPORTED_DIR_IMPORT in Node.js ESM
  */
-import { readFileSync, writeFileSync } from 'fs';
-import { join, dirname } from 'path';
+import { readFileSync, writeFileSync, existsSync } from 'fs';
+import { join, dirname, resolve } from 'path';
 import { fileURLToPath } from 'url';
-import { glob } from 'glob';
+import { globSync } from 'glob';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const distDir = join(__dirname, '../dist');
 
 // Find all .js files in dist
-const files = glob.sync('**/*.js', { cwd: distDir, absolute: true });
+const files = globSync('**/*.js', { cwd: distDir, absolute: true });
+
+console.log(`\n🔧 Fixing ESM imports in ${files.length} files...\n`);
 
 files.forEach(file => {
   let content = readFileSync(file, 'utf8');
   let modified = false;
+  const originalContent = content;
 
-  // Fix: import ... from './config' => import ... from './config/index.js'
-  // Fix: import ... from '../path' => import ... from '../path.js'
+  // Fix relative imports: from './something' or '../something'
   content = content.replace(
     /from\s+['"](\.[^'"]+)['"]/g,
-    (match, path) => {
+    (match, importPath) => {
       // Skip if already has extension
-      if (path.match(/\.(js|json)$/)) return match;
+      if (importPath.match(/\.(js|json)$/)) return match;
       
-      // Check if it's a directory import (ends with folder name)
-      if (path.endsWith('/config') || path.endsWith('/middleware') || 
-          path.endsWith('/db') || path.endsWith('/prisma') || 
-          path.endsWith('/types') || path.endsWith('/constants') ||
-          path.endsWith('/utils') || path.endsWith('/errors')) {
+      // Check if it's likely a directory import
+      const pathParts = importPath.split('/');
+      const lastPart = pathParts[pathParts.length - 1];
+      
+      // Common folder names that need /index.js
+      const folderNames = ['config', 'middleware', 'db', 'prisma', 'types', 
+                          'constants', 'utils', 'errors', 'infra', 'email'];
+      
+      if (folderNames.includes(lastPart)) {
         modified = true;
-        return `from '${path}/index.js'`;
+        return `from '${importPath}/index.js'`;
       }
       
       // Otherwise add .js
       modified = true;
-      return `from '${path}.js'`;
+      return `from '${importPath}.js'`;
     }
   );
 
-  if (modified) {
+  // Fix path alias imports: from '@/something'
+  content = content.replace(
+    /from\s+['"]\@\/([^'"]+)['"]/g,
+    (match, importPath) => {
+      // Skip if already has extension
+      if (importPath.match(/\.(js|json)$/)) return match;
+      
+      // Check if ends with folder name
+      const pathParts = importPath.split('/');
+      const lastPart = pathParts[pathParts.length - 1];
+      
+      const folderNames = ['config', 'middleware', 'db', 'prisma', 'types',
+                          'constants', 'utils', 'errors', 'infra', 'email'];
+      
+      if (folderNames.includes(lastPart)) {
+        modified = true;
+        // Convert @/ to relative path from dist root
+        return `from '../${importPath}/index.js'`;
+      }
+      
+      modified = true;
+      return `from '../${importPath}.js'`;
+    }
+  );
+
+  if (modified && content !== originalContent) {
     writeFileSync(file, content, 'utf8');
-    console.log(`✓ Fixed imports in: ${file}`);
+    const relativePath = file.replace(distDir, '');
+    console.log(`✓ ${relativePath}`);
   }
 });
 
-console.log(`✓ Processed ${files.length} files`);
+console.log(`\n✅ Done! Fixed imports in ${files.length} files\n`);
