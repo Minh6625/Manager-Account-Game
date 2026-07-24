@@ -1,0 +1,20 @@
+Fix: Vercel serverless routing for API endpoints (404 error)
+
+Changes:
+- Updated api/[...path].ts to properly handle Vercel serverless path routing
+- Fixed vercel.json rewrite rules to use :path* syntax
+- Added CORS support for same-origin Vercel deployment
+- Created .vercelignore to exclude unnecessary files from deployment
+- Added deployment documentation (VERCEL_DEPLOYMENT.md, QUICK_FIX_VERCEL.md)
+
+The frontend was calling /api/v1/auth/login but receiving 404 because:
+1. Vercel routes /api/* to the serverless function at api/[...path].ts
+2. The serverless function receives the path and needs to prepend /api
+3. Express routes handle both /api/v1/* and /v1/* patterns
+
+This fix ensures proper path handling in the serverless environment.
+
+Tested:
+- Health check endpoint (/api/health)
+- API version endpoint (/api/v1)
+- Auth login endpoint (/api/v1/auth/login)

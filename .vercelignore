@@ -1,0 +1,26 @@
+# Development files
+node_modules
+.git
+.env
+.env.local
+*.log
+
+# Documentation
+docs
+Promt
+*.md
+!VERCEL_DEPLOYMENT.md
+
+# Test files
+**/*.test.ts
+**/*.spec.ts
+
+# Source TypeScript (only need compiled JS)
+apps/api/src
+!apps/api/dist
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo

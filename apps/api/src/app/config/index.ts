@@ -33,7 +33,8 @@ export const config = {
   },
 
   cors: {
-    // Must match Vercel URL exactly when FE and API are on different domains
+    // Same-origin on Vercel: both FE and API served from same domain
+    // FRONTEND_URL should be set to the Vercel deployment URL
     origin: frontendUrl,
     credentials: true,
   },
