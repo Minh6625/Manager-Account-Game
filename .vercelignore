@@ -1,7 +1,5 @@
 # Development files
-node_modules
 .git
-.env
 .env.local
 *.log
 
@@ -10,17 +8,18 @@ docs
 Promt
 *.md
 !VERCEL_DEPLOYMENT.md
+!README.md
 
 # Test files
 **/*.test.ts
 **/*.spec.ts
-
-# Source TypeScript (only need compiled JS)
-apps/api/src
-!apps/api/dist
 
 # IDE
 .vscode
 .idea
 *.swp
 *.swo
+
+# Build artifacts (kept for debugging, Vercel will rebuild anyway)
+apps/web/dist
+apps/api/dist
