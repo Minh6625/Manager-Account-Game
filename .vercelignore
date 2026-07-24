@@ -20,6 +20,5 @@ Promt
 *.swp
 *.swo
 
-# Build artifacts (kept for debugging, Vercel will rebuild anyway)
+# Only web dist (will be regenerated), keep API dist for serverless function
 apps/web/dist
-apps/api/dist

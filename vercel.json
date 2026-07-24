@@ -1,14 +1,10 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "installCommand": "npm install",
-  "buildCommand": "npm run build -w @manager-acc/shared && npm run prisma:generate -w @manager-acc/api && npm run build -w @manager-acc/web",
+  "buildCommand": "npm run build -w @manager-acc/shared && npm run prisma:generate -w @manager-acc/api && npm run build -w @manager-acc/api && npm run build -w @manager-acc/web",
   "outputDirectory": "apps/web/dist",
   "framework": "vite",
   "rewrites": [
-    {
-      "source": "/api/:path*",
-      "destination": "/api/:path*"
-    },
     {
       "source": "/((?!api).*)",
       "destination": "/index.html"

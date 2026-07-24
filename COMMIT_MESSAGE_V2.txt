@@ -1,0 +1,22 @@
+Fix: Vercel serverless function import and build process
+
+Issues fixed:
+1. Serverless function was importing from TypeScript source instead of compiled JS
+2. API build step was missing from Vercel build command
+3. Vercel rewrites had redundant /api route configuration
+
+Changes:
+- Updated api/[...path].ts to use dynamic import from compiled dist folder
+- Added API build step to vercel.json buildCommand
+- Created tsconfig.json for api folder to support TypeScript compilation
+- Removed redundant /api rewrite (Vercel auto-maps api/ folder)
+- Updated .vercelignore to keep API dist folder for serverless function
+
+Build flow:
+1. Build shared package
+2. Generate Prisma client
+3. Build API to dist folder
+4. Build web frontend
+5. Serverless function imports compiled API from apps/api/dist
+
+This ensures the serverless function can properly load the Express app.
