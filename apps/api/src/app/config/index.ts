@@ -41,16 +41,17 @@ export const config = {
   /**
    * Auth cookie — single source of truth (login set / logout clear / middleware read).
    *
-   * Production (Vercel FE + Render API = cross-site):
-   *   sameSite: 'none' + secure: true  — required for credentials: 'include'
-   * Local (same-site proxy or localhost):
-   *   sameSite: 'lax' + secure: false
+   * - FE + API same origin on Vercel: sameSite 'lax' + secure (production)
+   * - FE/API different domains: set COOKIE_SAMESITE=none (and secure is forced)
+   * - Local: sameSite 'lax', secure false
    */
   cookie: {
     name: 'token',
     httpOnly: true,
     secure: isProd,
-    sameSite: (isProd ? 'none' : 'lax') as 'none' | 'lax',
+    sameSite: (process.env.COOKIE_SAMESITE === 'none' && isProd
+      ? 'none'
+      : 'lax') as 'none' | 'lax',
     maxAge: SESSION_DAYS * 24 * 60 * 60 * 1000,
   },
 
