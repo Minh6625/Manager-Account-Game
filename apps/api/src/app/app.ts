@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express'
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
-import { config } from './config'
+import { config } from './config/index'
 import { errorHandler } from './middleware/errorHandler'
 import { prisma } from '../infra/db/prisma'
 import authRoutes from '../modules/auth/auth.routes'
