@@ -5,13 +5,13 @@
 import { readFileSync, writeFileSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
-import glob from 'glob';
+import { globSync } from 'glob';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const distDir = join(__dirname, '../dist');
 
 // Find all .js files in dist
-const files = glob.sync('**/*.js', { cwd: distDir, absolute: true });
+const files = globSync('**/*.js', { cwd: distDir, absolute: true });
 
 console.log(`\n🔧 Fixing ESM imports in ${files.length} files...\n`);
 
