@@ -4,7 +4,7 @@
  * Processes both API and shared packages
  */
 import { readFileSync, writeFileSync, readdirSync, statSync, existsSync } from 'fs';
-import { join, dirname } from 'path';
+import { join, dirname, relative, sep } from 'path';
 import { fileURLToPath } from 'url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -112,18 +112,41 @@ dirsToProcess.forEach(distDir => {
         // Skip if already has extension
         if (importPath.match(/\.(js|json)$/)) return match;
         
-        // For path aliases, we can't easily check file system
-        // So use heuristic: check if ends with folder name
+        // Calculate relative path from current file to dist root
+        const currentDir = dirname(file);
+        const distRoot = distDir;
+        const relPath = relative(currentDir, distRoot);
+        const levels = relPath.split(sep).length;
+        const prefix = '../'.repeat(levels);
+        
+        // For path aliases, check what the target would be
+        const targetPath = join(distDir, importPath);
+        
+        // Check if it's a directory with index.js
+        if (existsSync(targetPath) && statSync(targetPath).isDirectory()) {
+          if (existsSync(join(targetPath, 'index.js'))) {
+            modified = true;
+            return `from '${prefix}${importPath}/index.js'`;
+          }
+        }
+        
+        // Check if .js file exists
+        if (existsSync(targetPath + '.js')) {
+          modified = true;
+          return `from '${prefix}${importPath}.js'`;
+        }
+        
+        // Fallback: use heuristic
         const pathParts = importPath.split('/');
         const lastPart = pathParts[pathParts.length - 1];
         
         if (folderNames.includes(lastPart)) {
           modified = true;
-          return `from '../${importPath}/index.js'`;
+          return `from '${prefix}${importPath}/index.js'`;
         }
         
         modified = true;
-        return `from '../${importPath}.js'`;
+        return `from '${prefix}${importPath}.js'`;
       }
     );
 
