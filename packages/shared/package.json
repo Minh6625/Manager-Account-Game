@@ -18,7 +18,7 @@
     "src"
   ],
   "scripts": {
-    "build": "tsc -p tsconfig.json",
+    "build": "tsc -p tsconfig.json && node ../../apps/api/scripts/fix-imports.js",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
