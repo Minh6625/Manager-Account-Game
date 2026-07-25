@@ -3,12 +3,29 @@
  * Fixes: ERR_UNSUPPORTED_DIR_IMPORT in Node.js ESM
  * Processes both API and shared packages
  */
-import { readFileSync, writeFileSync } from 'fs';
+import { readFileSync, writeFileSync, readdirSync, statSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
-import { globSync } from 'glob';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
+
+// Recursively find all .js files in a directory
+function findJsFiles(dir, fileList = []) {
+  const files = readdirSync(dir);
+  
+  files.forEach(file => {
+    const filePath = join(dir, file);
+    const stat = statSync(filePath);
+    
+    if (stat.isDirectory()) {
+      findJsFiles(filePath, fileList);
+    } else if (file.endsWith('.js')) {
+      fileList.push(filePath);
+    }
+  });
+  
+  return fileList;
+}
 
 // Process both API and shared package dist folders
 const dirsToProcess = [
@@ -25,18 +42,18 @@ dirsToProcess.forEach(distDir => {
   console.log(`📂 Processing: ${distDir}\n`);
   
   // Find all .js files in this dist folder
-  const files = globSync('**/*.js', { cwd: distDir, absolute: true });
+  const files = findJsFiles(distDir);
   totalFilesCount += files.length;
+
+  // Common folder names that need /index.js
+  const folderNames = ['config', 'middleware', 'db', 'prisma', 'types', 
+                      'constants', 'utils', 'errors', 'infra', 'email', 'schemas',
+                      'dto', 'validators'];
 
   files.forEach(file => {
     let content = readFileSync(file, 'utf8');
     const originalContent = content;
     let modified = false;
-
-    // Common folder names that need /index.js
-    const folderNames = ['config', 'middleware', 'db', 'prisma', 'types', 
-                        'constants', 'utils', 'errors', 'infra', 'email', 'schemas',
-                        'dto', 'validators'];
 
     // Fix relative imports AND exports: from './something' or export * from './something'
     content = content.replace(
