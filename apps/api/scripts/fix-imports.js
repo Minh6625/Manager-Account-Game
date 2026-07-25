@@ -55,9 +55,9 @@ dirsToProcess.forEach(distDir => {
   const files = findJsFiles(distDir);
   totalFilesCount += files.length;
 
-  // Common folder names that need /index.js
-  const folderNames = ['config', 'middleware', 'db', 'prisma', 'types', 
-                      'constants', 'utils', 'errors', 'infra', 'email', 'schemas',
+  // Common folder names that might need /index.js (used as fallback only)
+  const folderNames = ['config', 'middleware', 'types', 
+                      'constants', 'utils', 'errors', 'email', 'schemas',
                       'dto', 'validators'];
 
   files.forEach(file => {
@@ -72,7 +72,25 @@ dirsToProcess.forEach(distDir => {
         // Skip if already has extension
         if (importPath.match(/\.(js|json)$/)) return match;
         
-        // Check if it's likely a directory import
+        // Resolve the actual path relative to current file
+        const currentDir = dirname(file);
+        const targetPath = join(currentDir, importPath);
+        
+        // Check if it's a directory that contains index.js
+        if (existsSync(targetPath) && statSync(targetPath).isDirectory()) {
+          if (existsSync(join(targetPath, 'index.js'))) {
+            modified = true;
+            return `${keyword} '${importPath}/index.js'`;
+          }
+        }
+        
+        // Check if .js file exists
+        if (existsSync(targetPath + '.js')) {
+          modified = true;
+          return `${keyword} '${importPath}.js'`;
+        }
+        
+        // Fallback: check if last part is a known folder name
         const pathParts = importPath.split('/');
         const lastPart = pathParts[pathParts.length - 1];
         
@@ -81,7 +99,7 @@ dirsToProcess.forEach(distDir => {
           return `${keyword} '${importPath}/index.js'`;
         }
         
-        // Otherwise add .js
+        // Default: add .js
         modified = true;
         return `${keyword} '${importPath}.js'`;
       }
@@ -94,7 +112,8 @@ dirsToProcess.forEach(distDir => {
         // Skip if already has extension
         if (importPath.match(/\.(js|json)$/)) return match;
         
-        // Check if ends with folder name
+        // For path aliases, we can't easily check file system
+        // So use heuristic: check if ends with folder name
         const pathParts = importPath.split('/');
         const lastPart = pathParts[pathParts.length - 1];
         
