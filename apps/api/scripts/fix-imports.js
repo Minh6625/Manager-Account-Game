@@ -3,7 +3,7 @@
  * Fixes: ERR_UNSUPPORTED_DIR_IMPORT in Node.js ESM
  * Processes both API and shared packages
  */
-import { readFileSync, writeFileSync, readdirSync, statSync } from 'fs';
+import { readFileSync, writeFileSync, readdirSync, statSync, existsSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 
@@ -11,6 +11,10 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 
 // Recursively find all .js files in a directory
 function findJsFiles(dir, fileList = []) {
+  if (!existsSync(dir)) {
+    return fileList;
+  }
+  
   const files = readdirSync(dir);
   
   files.forEach(file => {
@@ -39,6 +43,12 @@ let totalFixedCount = 0;
 let totalFilesCount = 0;
 
 dirsToProcess.forEach(distDir => {
+  // Skip if directory doesn't exist yet
+  if (!existsSync(distDir)) {
+    console.log(`⏭️  Skipping (not built yet): ${distDir}\n`);
+    return;
+  }
+  
   console.log(`📂 Processing: ${distDir}\n`);
   
   // Find all .js files in this dist folder
