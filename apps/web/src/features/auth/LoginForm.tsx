@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Eye, EyeOff, Lock } from 'lucide-react';
+import { Eye, EyeOff } from 'lucide-react';
 import {
   Button,
   Card,
@@ -52,8 +52,8 @@ export function LoginForm() {
   return (
     <Card className="w-full max-w-md shadow-md">
       <CardHeader className="text-center">
-        <div className="mx-auto mb-2 flex size-12 items-center justify-center rounded-xl bg-primary text-primary-foreground">
-          <Lock className="size-5" />
+        <div className="mx-auto mb-2 flex size-12 items-center justify-center overflow-hidden rounded-xl">
+          <img src="/logo.png" alt="Logo" className="size-full object-cover" />
         </div>
         <CardTitle className="text-2xl font-bold">Manager Account</CardTitle>
         <CardDescription>Quản lý tài khoản Liên Quân</CardDescription>

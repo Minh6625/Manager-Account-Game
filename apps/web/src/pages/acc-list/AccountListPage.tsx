@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { LogOut, Plus, Gamepad2 } from 'lucide-react';
+import { LogOut, Plus } from 'lucide-react';
 import { useAuth } from '@/features/auth';
 import {
   AccountListPanel,
@@ -49,8 +49,8 @@ export default function AccountListPage() {
         <PageHeader
           left={
             <div className="flex items-center gap-2.5">
-              <div className="flex size-8 items-center justify-center rounded-md bg-primary text-primary-foreground">
-                <Gamepad2 className="size-4" />
+              <div className="flex size-8 items-center justify-center overflow-hidden rounded-md">
+                <img src="/logo.png" alt="Logo" className="size-full object-cover" />
               </div>
               <div className="min-w-0">
                 <p className="truncate text-sm font-semibold text-foreground">
